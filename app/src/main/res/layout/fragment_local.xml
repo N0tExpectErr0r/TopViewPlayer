@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/local_srl_refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.n0texpecterr0r.topviewplayer.widget.SideBarLayout
+            android:id="@+id/local_sbl_sidebar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/local_rcv_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </com.n0texpecterr0r.topviewplayer.widget.SideBarLayout>
+        <TextView
+            android:id="@+id/local_tv_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="18sp"
+            android:textColor="#212121"
+            android:visibility="gone"
+            android:gravity="center"
+            android:text="未找到本地音乐"/>
+    </FrameLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
+

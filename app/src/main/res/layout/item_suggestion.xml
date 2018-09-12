@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:foreground="?attr/selectableItemBackground"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="14dp"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp">
+        <ImageView
+            android:id="@+id/suggestion_iv_image"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_song"/>
+        <TextView
+            android:id="@+id/suggestion_tv_name"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#212121"
+            android:text="大千世界-许嵩"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#ddd"/>
+</LinearLayout>

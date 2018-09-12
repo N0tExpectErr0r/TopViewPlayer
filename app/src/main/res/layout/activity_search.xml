@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/search_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        style="@style/Toolbar.SearchToolbarStyle"
+        app:titleTextAppearance="@style/Toolbar.TitleText"
+        app:subtitleTextAppearance="@style/Toolbar.SubTitleText"
+        app:title=" "/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/search_rv_suggestions"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:textSize="18sp"
+        android:gravity="center_horizontal"
+        android:textColor="#484848"
+        android:text="无搜索建议"/>
+</LinearLayout> 
