@@ -2,6 +2,7 @@ package com.n0texpecterr0r.topviewplayer.base;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ public abstract class BaseMoreAdapter<T> extends RecyclerView.Adapter implements
     private List<T> mDatas;
     private int mItemLayoutId;
     private int mItemCount;
+    private boolean showBottom = true;
     private OnItemClickListener mOnItemClickListener = null;
 
     public BaseMoreAdapter(List<T> data, int itemLayoutId, int itemCount) {
@@ -31,11 +33,11 @@ public abstract class BaseMoreAdapter<T> extends RecyclerView.Adapter implements
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (TYPE_BOTTOM == viewType) {
-            //返回我们的那个加载中的布局Viewholder
+            //返回加载中的布局Viewholder
             return new CommonViewHolder(LayoutInflater
                     .from(parent.getContext()).inflate(R.layout.footer_layout, parent, false));
         } else {
-            //返回我们的交易记录的布局Viewholder
+            //返回Viewholder
             View view = LayoutInflater
                     .from(parent.getContext()).inflate(mItemLayoutId, parent, false);
             view.setOnClickListener(this);
@@ -45,6 +47,16 @@ public abstract class BaseMoreAdapter<T> extends RecyclerView.Adapter implements
 
     public void setDatas(List<T> datas) {
         mDatas = datas;
+        notifyDataSetChanged();
+    }
+
+    public void setShowBottom(boolean showBottom) {
+        this.showBottom = showBottom;
+    }
+
+    public void addDatas(List<T> datas) {
+        mDatas.addAll(datas);
+        Log.d("OnlineModel", datas.size() + "");
         notifyDataSetChanged();
     }
 
@@ -64,7 +76,11 @@ public abstract class BaseMoreAdapter<T> extends RecyclerView.Adapter implements
 
     @Override
     public int getItemCount() {
-        return mDatas.size() < mItemCount ? mDatas.size() : mDatas.size() + 1;
+        if (showBottom) {
+            return mDatas.size() < mItemCount ? mDatas.size() : mDatas.size() + 1;
+        }else{
+            return mDatas.size();
+        }
     }
 
     @Override

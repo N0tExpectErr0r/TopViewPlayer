@@ -60,7 +60,7 @@ public class LocalSongAdapter extends BaseAdapter<LocalSong> {
 
     @Override
     public void initItemView(CommonViewHolder holder, LocalSong song) {
-        holder.setText(R.id.local_tv_name, song.getName());
-        holder.setText(R.id.local_tv_desc, song.getSinger() + " -《" + song.getAlbum() + "》");
+        holder.setText(R.id.song_tv_name, song.getName());
+        holder.setText(R.id.song_tv_desc, song.getArtist() + " -《" + song.getAlbum() + "》");
     }
 }

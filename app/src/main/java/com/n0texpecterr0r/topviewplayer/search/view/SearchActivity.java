@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import com.n0texpecterr0r.topviewplayer.R;
 import com.n0texpecterr0r.topviewplayer.base.MvpBaseActivity;
+import com.n0texpecterr0r.topviewplayer.online.view.OnlineActivity;
 import com.n0texpecterr0r.topviewplayer.search.SearchContract.SearchView;
 import com.n0texpecterr0r.topviewplayer.search.adapter.SuggestionAdapter;
 import com.n0texpecterr0r.topviewplayer.search.bean.Suggestion;
@@ -47,6 +48,12 @@ public class SearchActivity extends MvpBaseActivity<SearchPresenterImpl> impleme
         mSvSearch.setOnQueryTextListener(new OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                if (!mSvSearch.getQuery().equals("")){
+                    OnlineActivity.actionStart(SearchActivity.this,query);
+                }else{
+                    Toasty.warning(SearchActivity.this,"未填写搜索信息").show();
+                }
+                finish();
                 return false;
             }
 

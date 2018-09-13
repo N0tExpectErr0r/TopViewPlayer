@@ -21,7 +21,7 @@ public abstract class OnMoreScrollListener extends RecyclerView.OnScrollListener
         super.onScrolled(recyclerView, dx, dy);
 
         RecyclerView.LayoutManager manager = mRecyclerView.getLayoutManager();
-        BaseAdapter adapter = (BaseAdapter) mRecyclerView.getAdapter();
+        BaseMoreAdapter adapter = (BaseMoreAdapter) mRecyclerView.getAdapter();
 
         if (null == manager) {
             throw new RuntimeException("you should call setLayoutManager() first!!");
@@ -30,7 +30,7 @@ public abstract class OnMoreScrollListener extends RecyclerView.OnScrollListener
             int lastCompletelyVisibleItemPosition = ((LinearLayoutManager) manager)
                     .findLastCompletelyVisibleItemPosition();
 
-            if (adapter.getItemCount() > 10 &&
+            if (adapter.getItemCount() > 20 &&
                     lastCompletelyVisibleItemPosition == adapter.getItemCount() - 1) {
                 onLoadMore();
             }

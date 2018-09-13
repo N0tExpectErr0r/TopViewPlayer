@@ -1,5 +1,7 @@
 package com.n0texpecterr0r.topviewplayer.recommend.model;
 
+import static com.n0texpecterr0r.topviewplayer.ContextApplication.USER_AGENT;
+
 import android.annotation.SuppressLint;
 import api.MusicApi;
 import com.google.gson.Gson;
@@ -73,8 +75,7 @@ public class RecommendModelImpl implements RecommendModel {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
                         .url(MusicApi.focusPic(6))
-                        .addHeader("User-Agent",
-                                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36")
+                        .addHeader("User-Agent",USER_AGENT)
                         .get()
                         .build();
                 Call call = client.newCall(request);
@@ -142,8 +143,7 @@ public class RecommendModelImpl implements RecommendModel {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
                         .url(MusicApi.GeDan.hotGeDan(6))
-                        .addHeader("User-Agent",
-                                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36")
+                        .addHeader("User-Agent",USER_AGENT)
                         .get()
                         .build();
                 Call call = client.newCall(request);
@@ -169,8 +169,7 @@ public class RecommendModelImpl implements RecommendModel {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
                         .url(MusicApi.Album.recommendAlbum(0, 6))
-                        .addHeader("User-Agent",
-                                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36")
+                        .addHeader("User-Agent",USER_AGENT)
                         .get()
                         .build();
                 Call call = client.newCall(request);
@@ -196,8 +195,7 @@ public class RecommendModelImpl implements RecommendModel {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
                         .url(MusicApi.Song.recommendSong(6))
-                        .addHeader("User-Agent",
-                                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36")
+                        .addHeader("User-Agent",USER_AGENT)
                         .get()
                         .build();
                 Call call = client.newCall(request);

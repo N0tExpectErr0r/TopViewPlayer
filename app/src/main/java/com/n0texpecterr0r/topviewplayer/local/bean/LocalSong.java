@@ -7,7 +7,7 @@ package com.n0texpecterr0r.topviewplayer.local.bean;
  */
 public class LocalSong {
     private String name;
-    private String singer;
+    private String artist;
     private String path;
     private String album;
     private int duration;
@@ -21,12 +21,12 @@ public class LocalSong {
         this.name = name;
     }
 
-    public String getSinger() {
-        return singer;
+    public String getArtist() {
+        return artist;
     }
 
-    public void setSinger(String singer) {
-        this.singer = singer;
+    public void setArtist(String artist) {
+        this.artist = artist;
     }
 
     public String getPath() {

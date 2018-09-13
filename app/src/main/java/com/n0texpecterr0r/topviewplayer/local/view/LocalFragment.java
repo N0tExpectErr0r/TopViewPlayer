@@ -51,7 +51,7 @@ public class LocalFragment extends MvpBaseFragment<LocalPresenterImpl> implement
             }
         });
 
-        mAdapter = new LocalSongAdapter(new ArrayList<LocalSong>(), R.layout.item_local_song);
+        mAdapter = new LocalSongAdapter(new ArrayList<LocalSong>(), R.layout.item_song);
         mRcvList.setLayoutManager(new LinearLayoutManager(getContext()));
         mRcvList.setAdapter(mAdapter);
         mPresenter.getLocalSongs(getContext());

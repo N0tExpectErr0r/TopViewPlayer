@@ -2,7 +2,6 @@ package com.n0texpecterr0r.topviewplayer.util;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.AudioColumns;
 import android.provider.MediaStore.Audio.Media;
 import com.n0texpecterr0r.topviewplayer.local.bean.LocalSong;
@@ -30,7 +29,7 @@ public class SongUtil {
             while (cursor.moveToNext()) {
                 LocalSong song = new LocalSong();
                 song.setName(cursor.getString(cursor.getColumnIndexOrThrow(Media.TITLE)));
-                song.setSinger(cursor.getString(cursor.getColumnIndexOrThrow(Media.ARTIST)));
+                song.setArtist(cursor.getString(cursor.getColumnIndexOrThrow(Media.ARTIST)));
                 song.setPath(cursor.getString(cursor.getColumnIndexOrThrow(Media.DATA)));
                 song.setDuration(cursor.getInt(cursor.getColumnIndexOrThrow(Media.DURATION)));
                 song.setSize(cursor.getLong(cursor.getColumnIndexOrThrow(Media.SIZE)));

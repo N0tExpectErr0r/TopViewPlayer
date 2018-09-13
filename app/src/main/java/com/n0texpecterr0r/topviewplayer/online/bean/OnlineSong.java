@@ -4,37 +4,31 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Created by Nullptr
- * @date 2018/9/13 16:42
+ * @date 2018/9/13 20:24
  * @describe TODO
  */
 public class OnlineSong {
-    @SerializedName("song_id")
-    private String songId;
-    @SerializedName("song_title")
-    private String name;
-    @SerializedName("artist_id")
-    private String artistId;
-    @SerializedName("artist_name")
-    private String artist;
-    @SerializedName("album_id")
-    private String albumId;
     @SerializedName("album_title")
     private String album;
+    @SerializedName("artist_id")
+    private String artistId;
+    @SerializedName("album_id")
+    private String albumId;
+    @SerializedName("title")
+    private String name;
+    @SerializedName("author")
+    private String artist;
+    @SerializedName("pic_small")
+    private String imgUrl;
+    @SerializedName("song_id")
+    private String songId;
 
-    public String getSongId() {
-        return songId;
+    public String getAlbum() {
+        return album;
     }
 
-    public void setSongId(String songId) {
-        this.songId = songId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setAlbum(String album) {
+        this.album = album;
     }
 
     public String getArtistId() {
@@ -45,14 +39,6 @@ public class OnlineSong {
         this.artistId = artistId;
     }
 
-    public String getArtist() {
-        return artist;
-    }
-
-    public void setArtist(String artist) {
-        this.artist = artist;
-    }
-
     public String getAlbumId() {
         return albumId;
     }
@@ -61,11 +47,35 @@ public class OnlineSong {
         this.albumId = albumId;
     }
 
-    public String getAlbum() {
-        return album;
+    public String getName() {
+        return name;
     }
 
-    public void setAlbum(String album) {
-        this.album = album;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getArtist() {
+        return artist;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+    public String getSongId() {
+        return songId;
+    }
+
+    public void setSongId(String songId) {
+        this.songId = songId;
     }
 }

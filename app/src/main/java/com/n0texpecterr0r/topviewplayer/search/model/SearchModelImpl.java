@@ -1,5 +1,7 @@
 package com.n0texpecterr0r.topviewplayer.search.model;
 
+import static com.n0texpecterr0r.topviewplayer.ContextApplication.USER_AGENT;
+
 import android.annotation.SuppressLint;
 import android.util.Log;
 import api.MusicApi.Search;
@@ -36,8 +38,7 @@ public class SearchModelImpl implements SearchModel {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Builder()
                         .url(Search.searchSugestion(query))
-                        .addHeader("User-Agent",
-                                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36")
+                        .addHeader("User-Agent", USER_AGENT)
                         .get()
                         .build();
                 Call call = client.newCall(request);
