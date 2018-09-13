@@ -3,17 +3,16 @@ package com.n0texpecterr0r.topviewplayer.recommend.model;
 import android.annotation.SuppressLint;
 import api.MusicApi;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.n0texpecterr0r.topviewplayer.recommend.RecommendContract.RecommendModel;
 import com.n0texpecterr0r.topviewplayer.recommend.RecommendContract.RecommendPresenterCallback;
+import com.n0texpecterr0r.topviewplayer.recommend.bean.AlbumRecommend;
+import com.n0texpecterr0r.topviewplayer.recommend.bean.GeDanRecommend;
 import com.n0texpecterr0r.topviewplayer.recommend.bean.Recommend;
-import com.n0texpecterr0r.topviewplayer.recommend.bean.album.AlbumRecommend;
-import com.n0texpecterr0r.topviewplayer.recommend.bean.album.AlbumRecommendList;
+import com.n0texpecterr0r.topviewplayer.recommend.bean.SongRecommend;
+import com.n0texpecterr0r.topviewplayer.recommend.bean.SongRecommendBean;
 import com.n0texpecterr0r.topviewplayer.recommend.bean.focus.Focus;
 import com.n0texpecterr0r.topviewplayer.recommend.bean.focus.FocusResponse;
-import com.n0texpecterr0r.topviewplayer.recommend.bean.gedan.GeDanRecommend;
-import com.n0texpecterr0r.topviewplayer.recommend.bean.gedan.GeDanRecommendResponse;
-import com.n0texpecterr0r.topviewplayer.recommend.bean.song.SongRecommend;
-import com.n0texpecterr0r.topviewplayer.recommend.bean.song.SongRecommendResponse;
 import com.n0texpecterr0r.topviewplayer.util.JsonUtil;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -85,7 +84,8 @@ public class RecommendModelImpl implements RecommendModel {
         }).map(new Function<Response, List<Focus>>() {
             @Override
             public List<Focus> apply(Response response) throws Exception {
-                return new Gson().fromJson(response.body().string(), FocusResponse.class).getFocuses();
+                String json = JsonUtil.getNodeString(response.body().string(),"pic");
+                return new Gson().fromJson(json, new TypeToken<List<Focus>>(){}.getType());
             }
         }).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -153,10 +153,10 @@ public class RecommendModelImpl implements RecommendModel {
         }).map(new Function<Response, List<GeDanRecommend>>() {
             @Override
             public List<GeDanRecommend> apply(Response response) throws Exception {
+                String json = JsonUtil.getNodeString(response.body().string(), "content.list");
                 List<GeDanRecommend> geDanRecommends = new Gson()
-                        .fromJson(response.body().string(), GeDanRecommendResponse.class)
-                        .getContent()
-                        .getList();
+                        .fromJson(json, new TypeToken<List<GeDanRecommend>>() {
+                        }.getType());
                 return geDanRecommends;
             }
         });
@@ -180,11 +180,10 @@ public class RecommendModelImpl implements RecommendModel {
         }).map(new Function<Response, List<AlbumRecommend>>() {
             @Override
             public List<AlbumRecommend> apply(Response response) throws Exception {
-                String json = JsonUtil.getNodeString(response.body().string(),
-                        "Json.error_code.plaze_album_list.RM.album_list");
+                String json = JsonUtil.getNodeString(response.body().string(), "plaze_album_list.RM.album_list.list");
                 List<AlbumRecommend> albumRecommends = new Gson()
-                        .fromJson(json, AlbumRecommendList.class)
-                        .getAlbumRecommends();
+                        .fromJson(json, new TypeToken<List<AlbumRecommend>>() {
+                        }.getType());
                 return albumRecommends;
             }
         });
@@ -208,9 +207,11 @@ public class RecommendModelImpl implements RecommendModel {
         }).map(new Function<Response, List<SongRecommend>>() {
             @Override
             public List<SongRecommend> apply(Response response) throws Exception {
-                List<SongRecommend> songRecommends = new Gson()
-                        .fromJson(response.body().string(), SongRecommendResponse.class)
-                        .getContent()
+                String json = JsonUtil.getNodeString(response.body().string(), "content");
+                List<SongRecommendBean> songRecommendResponses = new Gson()
+                        .fromJson(json, new TypeToken<List<SongRecommendBean>>() {
+                        }.getType());
+                List<SongRecommend> songRecommends = songRecommendResponses
                         .get(0)
                         .getSongRecommends();
                 return songRecommends;

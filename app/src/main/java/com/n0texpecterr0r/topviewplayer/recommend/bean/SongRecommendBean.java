@@ -1,4 +1,4 @@
-package com.n0texpecterr0r.topviewplayer.recommend.bean.song;
+package com.n0texpecterr0r.topviewplayer.recommend.bean;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.List;

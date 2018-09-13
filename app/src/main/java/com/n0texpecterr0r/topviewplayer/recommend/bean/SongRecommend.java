@@ -1,28 +1,20 @@
-package com.n0texpecterr0r.topviewplayer.recommend.bean.gedan;
+package com.n0texpecterr0r.topviewplayer.recommend.bean;
 
 import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Created by Nullptr
- * @date 2018/9/8 15:05
+ * @date 2018/9/8 14:38
  * @describe TODO
  */
-public class GeDanRecommend {
-    @SerializedName("listid")
-    private String listId;
-    @SerializedName("pic")
+public class SongRecommend {
+    @SerializedName("pic_big")
     private String imgUrl;
+    @SerializedName("song_id")
+    private String songId;
     private String title;
-    @SerializedName("tag")
+    @SerializedName("recommend_reason")
     private String desc;
-
-    public String getListId() {
-        return listId;
-    }
-
-    public void setListId(String listId) {
-        this.listId = listId;
-    }
 
     public String getImgUrl() {
         return imgUrl;
@@ -30,6 +22,14 @@ public class GeDanRecommend {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    public String getSongId() {
+        return songId;
+    }
+
+    public void setSongId(String songId) {
+        this.songId = songId;
     }
 
     public String getTitle() {

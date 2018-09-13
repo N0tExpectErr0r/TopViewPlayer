@@ -7,8 +7,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import api.MusicApi.Search;
 import com.n0texpecterr0r.topviewplayer.R;
 import com.n0texpecterr0r.topviewplayer.local.view.LocalFragment;
 import com.n0texpecterr0r.topviewplayer.main.adapter.ViewPagerAdapter;
@@ -54,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
         mVpPager.setAdapter(pagerAdapter);
         mVpPager.addOnPageChangeListener(new TabLayoutOnPageChangeListener(mTlTab));
         mTlTab.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mVpPager));
-
         setSupportActionBar(toolbar);
     }
 }
