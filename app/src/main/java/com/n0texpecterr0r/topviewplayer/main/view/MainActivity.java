@@ -4,14 +4,15 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TabLayout.TabLayoutOnPageChangeListener;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import api.MusicApi.Search;
 import com.n0texpecterr0r.topviewplayer.R;
+import com.n0texpecterr0r.topviewplayer.bottom.BottomFragment;
 import com.n0texpecterr0r.topviewplayer.local.view.LocalFragment;
 import com.n0texpecterr0r.topviewplayer.main.adapter.ViewPagerAdapter;
 import com.n0texpecterr0r.topviewplayer.recommend.view.RecommendFragment;
@@ -57,5 +58,11 @@ public class MainActivity extends AppCompatActivity {
         mVpPager.addOnPageChangeListener(new TabLayoutOnPageChangeListener(mTlTab));
         mTlTab.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mVpPager));
         setSupportActionBar(toolbar);
+
+        BottomFragment bottomFragment = new BottomFragment();
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.main_frag_bottom,bottomFragment);
+        transaction.commit();
     }
 }

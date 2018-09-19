@@ -50,6 +50,10 @@ public abstract class BaseMoreAdapter<T> extends RecyclerView.Adapter implements
         notifyDataSetChanged();
     }
 
+    public T getDataByIndex(int index){
+        return mDatas.get(index);
+    }
+
     public void setShowBottom(boolean showBottom) {
         this.showBottom = showBottom;
     }
