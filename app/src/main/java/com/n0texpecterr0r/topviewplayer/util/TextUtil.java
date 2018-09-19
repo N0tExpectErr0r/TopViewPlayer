@@ -13,11 +13,9 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
  * @describe TODO
  */
 public class TextUtil {
+
     /**
      * 将字符串中的中文转化为拼音,其他字符不变
-     *
-     * @param inputString
-     * @return
      */
     public static String getPingYin(String inputString) {
         HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
@@ -30,21 +28,19 @@ public class TextUtil {
 
         try {
             for (int i = 0; i < input.length; i++) {
-                // 判断是不是中文
-                if (java.lang.Character.toString(input[i]).matches(
-                        "[\\u4E00-\\u9FA5]+")) {
+                if (Character.toString(input[i]).matches("[\\u4E00-\\u9FA5]+")) {
+                    // 判断是否是中文
                     // 将汉语拼音的全拼存到temp数组
                     String[] temp = PinyinHelper.toHanyuPinyinStringArray(
                             input[i], format);
                     // 取拼音的第一个读音
                     output += temp[0];
-                }
-                // 小写字母转化成大写字母
-                else if (input[i] > 'a' && input[i] < 'z') {
-                    output += java.lang.Character.toString(input[i]);
+                } else if (input[i] > 'a' && input[i] < 'z') {
+                    // 是英文，全部转为大写字母
+                    output += Character.toString(input[i]);
                     output = output.toUpperCase();
                 }
-                output += java.lang.Character.toString(input[i]);
+                output += Character.toString(input[i]);
             }
         } catch (Exception e) {
             Log.e("Exception", e.toString());

@@ -38,6 +38,10 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter implements Vie
         notifyDataSetChanged();
     }
 
+    public List<T> getDatas() {
+        return mDatas;
+    }
+
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         if (getItemViewType(position) != TYPE_BOTTOM) {

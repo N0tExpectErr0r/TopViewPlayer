@@ -10,6 +10,7 @@ public class LocalSong {
     private String artist;
     private String path;
     private String album;
+    private String ImgUrl;
     private int duration;
     private long size;
 
@@ -43,6 +44,14 @@ public class LocalSong {
 
     public void setDuration(int duration) {
         this.duration = duration;
+    }
+
+    public String getImgUrl() {
+        return ImgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        ImgUrl = imgUrl;
     }
 
     public long getSize() {

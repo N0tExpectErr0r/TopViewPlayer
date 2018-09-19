@@ -25,6 +25,13 @@
         </activity>
         <activity android:name=".online.view.OnlineActivity">
         </activity>
+        <service android:process=":player"
+            android:name=".player.PlayerService">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="com.n0texpecterr0r.topviewplayer.PlayerService"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
