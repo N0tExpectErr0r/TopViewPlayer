@@ -75,6 +75,11 @@ public class LocalListManager extends AbstractListManager {
         }
     }
 
+    @Override
+    public boolean isEmpty() {
+        return mSongList == null;
+    }
+
     public LocalSong getCurrentSong(){
         return mSongList.get(mCurrentIndex);
     }

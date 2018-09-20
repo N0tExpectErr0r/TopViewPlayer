@@ -10,4 +10,5 @@ interface IPlayerService {
       void seekTo(int time);
       int getDuration();
       int getCurrentTime();
+      boolean isPlaying();
 }

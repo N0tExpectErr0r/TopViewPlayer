@@ -79,11 +79,11 @@ public class OnlineActivity extends MvpBaseActivity<OnlinePresenterImpl> impleme
 
         mPresenter.getOnlineSongs(query,pageNo++);
 
-        BottomFragment bottomFragment = new BottomFragment();
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.online_frag_bottom,bottomFragment);
-        transaction.commit();
+        //BottomFragment bottomFragment = new BottomFragment();
+        //FragmentManager manager = getSupportFragmentManager();
+        //FragmentTransaction transaction = manager.beginTransaction();
+        //transaction.replace(R.id.online_frag_bottom,bottomFragment);
+        //transaction.commit();
     }
 
     @Override
@@ -108,6 +108,11 @@ public class OnlineActivity extends MvpBaseActivity<OnlinePresenterImpl> impleme
         if (pageNo == 2) {
             mSrlRefresh.setRefreshing(true);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override

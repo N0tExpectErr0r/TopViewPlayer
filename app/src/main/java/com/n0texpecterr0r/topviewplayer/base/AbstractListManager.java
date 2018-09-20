@@ -8,4 +8,5 @@ package com.n0texpecterr0r.topviewplayer.base;
 public abstract class AbstractListManager {
     public abstract void prev();
     public abstract void next();
+    public abstract boolean isEmpty();
 }

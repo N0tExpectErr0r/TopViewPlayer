@@ -5,6 +5,7 @@ import static com.n0texpecterr0r.topviewplayer.util.ModeManager.MODE_RANDOM;
 import static com.n0texpecterr0r.topviewplayer.util.ModeManager.MODE_SINGLE;
 
 import com.n0texpecterr0r.topviewplayer.base.AbstractListManager;
+import com.n0texpecterr0r.topviewplayer.base.Song;
 import com.n0texpecterr0r.topviewplayer.online.bean.OnlineSong;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +75,11 @@ public class OnlineListManager extends AbstractListManager {
             case MODE_SINGLE:
                 break;
         }
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return mSongList.isEmpty();
     }
 
     public OnlineSong getCurrentSong() {

@@ -67,6 +67,11 @@ public class PlayerService extends Service {
         public int getCurrentTime() throws RemoteException {
             return mPlayer.getCurrentPosition();
         }
+
+        @Override
+        public boolean isPlaying() throws RemoteException {
+            return mPlayer.isPlaying();
+        }
     };
 
     @Nullable

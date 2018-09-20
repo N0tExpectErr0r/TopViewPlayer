@@ -59,10 +59,10 @@ public class MainActivity extends AppCompatActivity {
         mTlTab.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mVpPager));
         setSupportActionBar(toolbar);
 
-        BottomFragment bottomFragment = new BottomFragment();
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.main_frag_bottom,bottomFragment);
-        transaction.commit();
+        //BottomFragment bottomFragment = new BottomFragment();
+        //FragmentManager manager = getSupportFragmentManager();
+        //FragmentTransaction transaction = manager.beginTransaction();
+        //transaction.replace(R.id.main_frag_bottom,bottomFragment);
+        //transaction.commit();
     }
 }

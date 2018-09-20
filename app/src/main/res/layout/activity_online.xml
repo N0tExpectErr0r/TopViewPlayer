@@ -26,8 +26,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </android.support.v4.widget.SwipeRefreshLayout>
-    <FrameLayout
+    <fragment
         android:id="@+id/online_frag_bottom"
+        android:name="com.n0texpecterr0r.topviewplayer.bottom.BottomFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></FrameLayout>
+        android:layout_height="wrap_content"/>
 </LinearLayout>

@@ -20,6 +20,7 @@ import com.n0texpecterr0r.topviewplayer.IPlayerService;
 import com.n0texpecterr0r.topviewplayer.R;
 import com.n0texpecterr0r.topviewplayer.base.BaseAdapter.OnItemClickListener;
 import com.n0texpecterr0r.topviewplayer.base.MvpBaseFragment;
+import com.n0texpecterr0r.topviewplayer.base.Song;
 import com.n0texpecterr0r.topviewplayer.local.LocalContract.LocalView;
 import com.n0texpecterr0r.topviewplayer.local.adapter.LocalSongAdapter;
 import com.n0texpecterr0r.topviewplayer.local.bean.LocalSong;
@@ -32,6 +33,7 @@ import com.n0texpecterr0r.topviewplayer.widget.SideBarLayout;
 import es.dmoral.toasty.Toasty;
 import java.util.ArrayList;
 import java.util.List;
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * @author Created by Nullptr
@@ -46,6 +48,11 @@ public class LocalFragment extends MvpBaseFragment<LocalPresenterImpl> implement
     private RecyclerView mRcvList;
     private TextView mTvEmpty;
     private LocalSongAdapter mAdapter;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateFragmentView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -152,5 +159,11 @@ public class LocalFragment extends MvpBaseFragment<LocalPresenterImpl> implement
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+        EventBus.getDefault().post(new Song(
+                song.getName(),
+                song.getImgUrl(),
+                song.getAlbum(),
+                song.getArtist()
+        ));
     }
 }

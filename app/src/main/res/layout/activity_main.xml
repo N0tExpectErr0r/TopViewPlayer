@@ -43,8 +43,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
-    <FrameLayout
+    <fragment
         android:id="@+id/main_frag_bottom"
+        android:name="com.n0texpecterr0r.topviewplayer.bottom.BottomFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></FrameLayout>
+        android:layout_height="wrap_content"/>
 </LinearLayout> 
