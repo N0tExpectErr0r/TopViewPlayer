@@ -2,13 +2,12 @@ package com.n0texpecterr0r.topviewplayer.online.model;
 
 import static com.n0texpecterr0r.topviewplayer.ContextApplication.USER_AGENT;
 
-import android.util.Log;
 import api.MusicApi;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract.OnlinePresenterCallback;
-import com.n0texpecterr0r.topviewplayer.online.bean.OnlineSong;
+import com.n0texpecterr0r.topviewplayer.online.bean.Song;
 import com.n0texpecterr0r.topviewplayer.util.JsonUtil;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -45,17 +44,17 @@ public class OnlineModelImpl implements OnlineContract.OnlineModel {
                 Response response = call.execute();
                 emitter.onNext(response);
             }
-        }).map(new Function<Response, List<OnlineSong>>() {
+        }).map(new Function<Response, List<Song>>() {
             @Override
-            public List<OnlineSong> apply(Response response) throws Exception {
+            public List<Song> apply(Response response) throws Exception {
                 String json = JsonUtil.getNodeString(response.body().string(), "result.song_info.song_list");
-                return new Gson().fromJson(json, new TypeToken<List<OnlineSong>>() {}.getType());
+                return new Gson().fromJson(json, new TypeToken<List<Song>>() {}.getType());
             }
         }).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<OnlineSong>>() {
+                .subscribe(new Consumer<List<Song>>() {
                     @Override
-                    public void accept(List<OnlineSong> songList) throws Exception {
+                    public void accept(List<Song> songList) throws Exception {
                         callback.solveSong(songList);
                         if (songList.size() < 20) {
                             callback.loadCompelete();

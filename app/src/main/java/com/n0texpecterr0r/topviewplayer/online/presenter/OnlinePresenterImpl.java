@@ -5,7 +5,7 @@ import com.n0texpecterr0r.topviewplayer.online.OnlineContract.OnlineModel;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract.OnlinePresenter;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract.OnlinePresenterCallback;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract.OnlineView;
-import com.n0texpecterr0r.topviewplayer.online.bean.OnlineSong;
+import com.n0texpecterr0r.topviewplayer.online.bean.Song;
 import com.n0texpecterr0r.topviewplayer.online.model.OnlineModelImpl;
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class OnlinePresenterImpl extends MvpBasePresenter<OnlineView>
     }
 
     @Override
-    public void solveSong(List<OnlineSong> songList) {
+    public void solveSong(List<Song> songList) {
         mView.addSong(songList);
         mView.hideLoading();
     }

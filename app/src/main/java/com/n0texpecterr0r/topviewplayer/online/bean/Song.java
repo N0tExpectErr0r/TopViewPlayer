@@ -7,13 +7,9 @@ import com.google.gson.annotations.SerializedName;
  * @date 2018/9/13 20:24
  * @describe TODO
  */
-public class OnlineSong {
+public class Song {
     @SerializedName("album_title")
     private String album;
-    @SerializedName("artist_id")
-    private String artistId;
-    @SerializedName("album_id")
-    private String albumId;
     @SerializedName("title")
     private String name;
     @SerializedName("author")
@@ -22,6 +18,24 @@ public class OnlineSong {
     private String imgUrl;
     @SerializedName("song_id")
     private String songId;
+    private transient String path;
+    private transient boolean isOnline;
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public boolean isOnline() {
+        return isOnline;
+    }
+
+    public void setOnline(boolean online) {
+        isOnline = online;
+    }
 
     public String getAlbum() {
         return album;
@@ -29,22 +43,6 @@ public class OnlineSong {
 
     public void setAlbum(String album) {
         this.album = album;
-    }
-
-    public String getArtistId() {
-        return artistId;
-    }
-
-    public void setArtistId(String artistId) {
-        this.artistId = artistId;
-    }
-
-    public String getAlbumId() {
-        return albumId;
-    }
-
-    public void setAlbumId(String albumId) {
-        this.albumId = albumId;
     }
 
     public String getName() {

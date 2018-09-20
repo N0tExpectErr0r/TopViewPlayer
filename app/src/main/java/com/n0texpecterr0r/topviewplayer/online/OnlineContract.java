@@ -1,7 +1,7 @@
 package com.n0texpecterr0r.topviewplayer.online;
 
 import com.n0texpecterr0r.topviewplayer.base.MvpBaseView;
-import com.n0texpecterr0r.topviewplayer.online.bean.OnlineSong;
+import com.n0texpecterr0r.topviewplayer.online.bean.Song;
 import java.util.List;
 
 /**
@@ -11,12 +11,12 @@ import java.util.List;
  */
 public class OnlineContract {
     public interface OnlineView extends MvpBaseView{
-        void addSong(List<OnlineSong> songList);
+        void addSong(List<Song> songList);
         void loadCompelete();
     }
 
     public interface OnlinePresenterCallback {
-        void solveSong(List<OnlineSong> songList);
+        void solveSong(List<Song> songList);
         void error();
         void loadCompelete();
     }

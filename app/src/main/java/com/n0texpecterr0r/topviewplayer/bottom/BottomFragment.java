@@ -10,7 +10,6 @@ import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,14 +19,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.n0texpecterr0r.topviewplayer.IPlayerService;
 import com.n0texpecterr0r.topviewplayer.R;
-import com.n0texpecterr0r.topviewplayer.base.AbstractListManager;
-import com.n0texpecterr0r.topviewplayer.base.Song;
-import com.n0texpecterr0r.topviewplayer.local.bean.LocalSong;
-import com.n0texpecterr0r.topviewplayer.online.bean.OnlineSong;
+import com.n0texpecterr0r.topviewplayer.online.bean.Song;
 import com.n0texpecterr0r.topviewplayer.player.PlayerService;
-import com.n0texpecterr0r.topviewplayer.util.ListManager;
-import com.n0texpecterr0r.topviewplayer.util.LocalListManager;
-import com.n0texpecterr0r.topviewplayer.util.OnlineListManager;
+import com.n0texpecterr0r.topviewplayer.util.SongListManager;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -101,22 +95,14 @@ public class BottomFragment extends Fragment implements OnClickListener {
         getContext().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
-    private void initView(){
-        AbstractListManager manager = ListManager.getCurrentManager();
+    private void initView() {
+        SongListManager manager = SongListManager.getInstance();
         if (manager != null && !manager.isEmpty()) {
             // 恢复歌曲信息数据
-            if (manager instanceof LocalListManager) {
-                LocalSong song = ((LocalListManager) manager).getCurrentSong();
-                mTvArtist.setText(song.getArtist());
-                Glide.with(this).load(song.getImgUrl()).into(mIvCover);
-                mTvName.setText(song.getName());
-                mTvArtist.setText(song.getArtist());
-            } else {
-                OnlineSong song = ((OnlineListManager) manager).getCurrentSong();
-                Glide.with(this).load(song.getImgUrl()).into(mIvCover);
-                mTvName.setText(song.getName());
-                mTvArtist.setText(song.getArtist());
-            }
+            Song song = manager.getCurrentSong();
+            Glide.with(this).load(song.getImgUrl()).into(mIvCover);
+            mTvName.setText(song.getName());
+            mTvArtist.setText(song.getArtist());
         }
     }
 

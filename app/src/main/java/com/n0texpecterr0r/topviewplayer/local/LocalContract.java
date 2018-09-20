@@ -2,7 +2,7 @@ package com.n0texpecterr0r.topviewplayer.local;
 
 import android.content.Context;
 import com.n0texpecterr0r.topviewplayer.base.MvpBaseView;
-import com.n0texpecterr0r.topviewplayer.local.bean.LocalSong;
+import com.n0texpecterr0r.topviewplayer.online.bean.Song;
 import java.util.List;
 
 /**
@@ -12,11 +12,11 @@ import java.util.List;
  */
 public class LocalContract {
     public interface LocalView extends MvpBaseView{
-        void showSongs(List<LocalSong> songList);
+        void showSongs(List<Song> songList);
     }
 
     public interface LocalPresenterCallback{
-        void solveSongs(List<LocalSong> songList);
+        void solveSongs(List<Song> songList);
         void error();
     }
 

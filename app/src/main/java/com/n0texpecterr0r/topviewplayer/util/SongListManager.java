@@ -5,54 +5,55 @@ import static com.n0texpecterr0r.topviewplayer.util.ModeManager.MODE_RANDOM;
 import static com.n0texpecterr0r.topviewplayer.util.ModeManager.MODE_SINGLE;
 
 import com.n0texpecterr0r.topviewplayer.base.AbstractListManager;
-import com.n0texpecterr0r.topviewplayer.local.bean.LocalSong;
+import com.n0texpecterr0r.topviewplayer.online.bean.Song;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 /**
  * @author Created by Nullptr
- * @date 2018/9/19 15:17
- * @describe 本地播放列表Manager
+ * @date 2018/9/19 16:02
+ * @describe TODO
  */
-public class LocalListManager extends AbstractListManager {
-    private static LocalListManager sInstance;
-    private List<LocalSong> mSongList;
+public class SongListManager extends AbstractListManager {
+
+    private static SongListManager sInstance;
+    private List<Song> mSongList;
     private int mCurrentIndex;
 
-    public LocalListManager() {
+    public SongListManager() {
         mSongList = new ArrayList<>();
     }
 
-    public static LocalListManager getInstance(){
-        if (sInstance == null){
-            synchronized (LocalListManager.class){
-                if (sInstance == null){
-                    sInstance = new LocalListManager();
+    public static SongListManager getInstance() {
+        if (sInstance == null) {
+            synchronized (SongListManager.class) {
+                if (sInstance == null) {
+                    sInstance = new SongListManager();
                 }
             }
         }
         return sInstance;
     }
 
-    public void setSongList(List<LocalSong> songList){
+    public void setSongList(List<Song> songList) {
         mSongList = songList;
     }
 
-    public void setCurrentIndex(int currentIndex){
+    public void setCurrentIndex(int currentIndex) {
         mCurrentIndex = currentIndex;
     }
 
     @Override
-    public void prev(){
-        switch (ModeManager.getInstance().getCurrentMode()){
+    public void prev() {
+        switch (ModeManager.getInstance().getCurrentMode()) {
             case MODE_DEFAULT:
-                if(mCurrentIndex--==0){
-                    mCurrentIndex = mSongList.size()-1;
+                if (mCurrentIndex-- == 0) {
+                    mCurrentIndex = mSongList.size() - 1;
                 }
                 break;
             case MODE_RANDOM:
-                mCurrentIndex = new Random().nextInt(mSongList.size()-1);
+                mCurrentIndex = new Random().nextInt(mSongList.size() - 1);
                 break;
             case MODE_SINGLE:
                 break;
@@ -60,15 +61,15 @@ public class LocalListManager extends AbstractListManager {
     }
 
     @Override
-    public void next(){
-        switch (ModeManager.getInstance().getCurrentMode()){
+    public void next() {
+        switch (ModeManager.getInstance().getCurrentMode()) {
             case MODE_DEFAULT:
-                if(mCurrentIndex++==mSongList.size()-1){
+                if (mCurrentIndex++ == mSongList.size() - 1) {
                     mCurrentIndex = 0;
                 }
                 break;
             case MODE_RANDOM:
-                mCurrentIndex = new Random().nextInt(mSongList.size()-1);
+                mCurrentIndex = new Random().nextInt(mSongList.size() - 1);
                 break;
             case MODE_SINGLE:
                 break;
@@ -77,11 +78,10 @@ public class LocalListManager extends AbstractListManager {
 
     @Override
     public boolean isEmpty() {
-        return mSongList == null;
+        return mSongList.isEmpty();
     }
 
-    public LocalSong getCurrentSong(){
+    public Song getCurrentSong() {
         return mSongList.get(mCurrentIndex);
     }
-
 }

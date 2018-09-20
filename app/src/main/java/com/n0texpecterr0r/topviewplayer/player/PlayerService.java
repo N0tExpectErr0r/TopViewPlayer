@@ -3,6 +3,7 @@ package com.n0texpecterr0r.topviewplayer.player;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -22,6 +23,12 @@ public class PlayerService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        mPlayer.setOnCompletionListener(new OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+
+            }
+        });
     }
 
     private Binder mBinder = new IPlayerService.Stub() {

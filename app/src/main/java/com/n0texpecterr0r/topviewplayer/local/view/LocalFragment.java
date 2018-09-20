@@ -20,14 +20,12 @@ import com.n0texpecterr0r.topviewplayer.IPlayerService;
 import com.n0texpecterr0r.topviewplayer.R;
 import com.n0texpecterr0r.topviewplayer.base.BaseAdapter.OnItemClickListener;
 import com.n0texpecterr0r.topviewplayer.base.MvpBaseFragment;
-import com.n0texpecterr0r.topviewplayer.base.Song;
 import com.n0texpecterr0r.topviewplayer.local.LocalContract.LocalView;
 import com.n0texpecterr0r.topviewplayer.local.adapter.LocalSongAdapter;
-import com.n0texpecterr0r.topviewplayer.local.bean.LocalSong;
 import com.n0texpecterr0r.topviewplayer.local.presenter.LocalPresenterImpl;
+import com.n0texpecterr0r.topviewplayer.online.bean.Song;
 import com.n0texpecterr0r.topviewplayer.player.PlayerService;
-import com.n0texpecterr0r.topviewplayer.util.ListManager;
-import com.n0texpecterr0r.topviewplayer.util.LocalListManager;
+import com.n0texpecterr0r.topviewplayer.util.SongListManager;
 import com.n0texpecterr0r.topviewplayer.widget.SideBar.OnChooseLetterListener;
 import com.n0texpecterr0r.topviewplayer.widget.SideBarLayout;
 import es.dmoral.toasty.Toasty;
@@ -64,8 +62,8 @@ public class LocalFragment extends MvpBaseFragment<LocalPresenterImpl> implement
         mTvEmpty = view.findViewById(R.id.local_tv_empty);
 
         // 绑定服务
-        Intent intent = new Intent(getContext(),PlayerService.class);
-        getContext().bindService(intent,mConnection,Context.BIND_AUTO_CREATE);
+        Intent intent = new Intent(getContext(), PlayerService.class);
+        getContext().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
         mSrlRefresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -74,7 +72,7 @@ public class LocalFragment extends MvpBaseFragment<LocalPresenterImpl> implement
             }
         });
 
-        mAdapter = new LocalSongAdapter(new ArrayList<LocalSong>(), R.layout.item_song);
+        mAdapter = new LocalSongAdapter(new ArrayList<Song>(), R.layout.item_song);
         mRcvList.setLayoutManager(new LinearLayoutManager(getContext()));
         mRcvList.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
@@ -86,7 +84,7 @@ public class LocalFragment extends MvpBaseFragment<LocalPresenterImpl> implement
                 LinearLayoutManager manager = (LinearLayoutManager) mRcvList.getLayoutManager();
                 Integer index = mAdapter.getIndexOfChar(letter.charAt(0));
                 if (index != null) {
-                    manager.scrollToPositionWithOffset(index,0);
+                    manager.scrollToPositionWithOffset(index, 0);
                     manager.setStackFromEnd(false);
                 }
             }
@@ -105,7 +103,7 @@ public class LocalFragment extends MvpBaseFragment<LocalPresenterImpl> implement
     }
 
     @Override
-    public void showSongs(List<LocalSong> songList) {
+    public void showSongs(List<Song> songList) {
         mAdapter.setDatas(songList);
         mSrlRefresh.setEnabled(false);
     }
@@ -147,23 +145,17 @@ public class LocalFragment extends MvpBaseFragment<LocalPresenterImpl> implement
     @Override
     public void onItemClick(View view, int position) {
         // 设置当前歌曲及歌曲列表
-        ListManager.setManagerType(ListManager.TYPE_LOCAL);
-        LocalListManager listManager = (LocalListManager) ListManager.getCurrentManager();
-        listManager.setCurrentIndex(position);
-        listManager.setSongList(mAdapter.getDatas());
+        SongListManager manager = SongListManager.getInstance();
+        manager.setCurrentIndex(position);
+        manager.setSongList(mAdapter.getDatas());
 
-        LocalSong song = listManager.getCurrentSong();
+        Song song = manager.getCurrentSong();
         try {
             mPlayerService.setSource(song.getPath());
             mPlayerService.start();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        EventBus.getDefault().post(new Song(
-                song.getName(),
-                song.getImgUrl(),
-                song.getAlbum(),
-                song.getArtist()
-        ));
+        EventBus.getDefault().post(song);
     }
 }

@@ -3,25 +3,18 @@ package com.n0texpecterr0r.topviewplayer.online.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import api.MusicApi;
 import com.n0texpecterr0r.topviewplayer.R;
-import com.n0texpecterr0r.topviewplayer.base.BaseMoreAdapter.OnItemClickListener;
 import com.n0texpecterr0r.topviewplayer.base.MvpBaseActivity;
 import com.n0texpecterr0r.topviewplayer.base.OnMoreScrollListener;
-import com.n0texpecterr0r.topviewplayer.bottom.BottomFragment;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract.OnlineView;
 import com.n0texpecterr0r.topviewplayer.online.adapter.OnlineAdapter;
-import com.n0texpecterr0r.topviewplayer.online.bean.OnlineSong;
+import com.n0texpecterr0r.topviewplayer.online.bean.Song;
 import com.n0texpecterr0r.topviewplayer.online.presenter.OnlinePresenterImpl;
 import es.dmoral.toasty.Toasty;
 import java.util.ArrayList;
@@ -68,7 +61,7 @@ public class OnlineActivity extends MvpBaseActivity<OnlinePresenterImpl> impleme
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         mRcvList.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new OnlineAdapter(new ArrayList<OnlineSong>(),R.layout.item_song,20);
+        mAdapter = new OnlineAdapter(new ArrayList<Song>(),R.layout.item_song,20);
         mRcvList.setAdapter(mAdapter);
         mRcvList.addOnScrollListener(new OnMoreScrollListener(mRcvList) {
             @Override
@@ -78,12 +71,6 @@ public class OnlineActivity extends MvpBaseActivity<OnlinePresenterImpl> impleme
         });
 
         mPresenter.getOnlineSongs(query,pageNo++);
-
-        //BottomFragment bottomFragment = new BottomFragment();
-        //FragmentManager manager = getSupportFragmentManager();
-        //FragmentTransaction transaction = manager.beginTransaction();
-        //transaction.replace(R.id.online_frag_bottom,bottomFragment);
-        //transaction.commit();
     }
 
     @Override
@@ -92,7 +79,7 @@ public class OnlineActivity extends MvpBaseActivity<OnlinePresenterImpl> impleme
     }
 
     @Override
-    public void addSong(List<OnlineSong> songList) {
+    public void addSong(List<Song> songList) {
         mAdapter.addDatas(songList);
         mSrlRefresh.setEnabled(false);
     }

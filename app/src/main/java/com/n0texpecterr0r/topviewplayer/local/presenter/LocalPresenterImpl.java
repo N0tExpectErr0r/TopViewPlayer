@@ -2,13 +2,12 @@ package com.n0texpecterr0r.topviewplayer.local.presenter;
 
 import android.content.Context;
 import com.n0texpecterr0r.topviewplayer.base.MvpBasePresenter;
-import com.n0texpecterr0r.topviewplayer.base.MvpBaseView;
 import com.n0texpecterr0r.topviewplayer.local.LocalContract;
 import com.n0texpecterr0r.topviewplayer.local.LocalContract.LocalModel;
 import com.n0texpecterr0r.topviewplayer.local.LocalContract.LocalPresenterCallback;
 import com.n0texpecterr0r.topviewplayer.local.LocalContract.LocalView;
-import com.n0texpecterr0r.topviewplayer.local.bean.LocalSong;
 import com.n0texpecterr0r.topviewplayer.local.model.LocalModelImpl;
+import com.n0texpecterr0r.topviewplayer.online.bean.Song;
 import java.util.List;
 
 /**
@@ -31,7 +30,7 @@ public class LocalPresenterImpl extends MvpBasePresenter<LocalView>
     }
 
     @Override
-    public void solveSongs(List<LocalSong> songList) {
+    public void solveSongs(List<Song> songList) {
         mView.showSongs(songList);
         mView.hideLoading();
     }
