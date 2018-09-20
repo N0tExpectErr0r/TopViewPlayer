@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.AudioColumns;
 import android.provider.MediaStore.Audio.Media;
-import com.n0texpecterr0r.topviewplayer.online.bean.Song;
+import com.n0texpecterr0r.topviewplayer.base.Song;
 import java.util.ArrayList;
 import java.util.List;
 

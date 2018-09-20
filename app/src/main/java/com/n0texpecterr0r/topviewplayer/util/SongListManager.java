@@ -5,7 +5,7 @@ import static com.n0texpecterr0r.topviewplayer.util.ModeManager.MODE_RANDOM;
 import static com.n0texpecterr0r.topviewplayer.util.ModeManager.MODE_SINGLE;
 
 import com.n0texpecterr0r.topviewplayer.base.AbstractListManager;
-import com.n0texpecterr0r.topviewplayer.online.bean.Song;
+import com.n0texpecterr0r.topviewplayer.base.Song;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -82,6 +82,10 @@ public class SongListManager extends AbstractListManager {
     }
 
     public Song getCurrentSong() {
-        return mSongList.get(mCurrentIndex);
+        if (!mSongList.isEmpty()) {
+            return mSongList.get(mCurrentIndex);
+        }else{
+            return null;
+        }
     }
 }

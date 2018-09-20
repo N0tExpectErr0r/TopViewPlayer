@@ -3,7 +3,7 @@ package com.n0texpecterr0r.topviewplayer.local.model;
 import android.content.Context;
 import com.n0texpecterr0r.topviewplayer.local.LocalContract;
 import com.n0texpecterr0r.topviewplayer.local.LocalContract.LocalPresenterCallback;
-import com.n0texpecterr0r.topviewplayer.online.bean.Song;
+import com.n0texpecterr0r.topviewplayer.base.Song;
 import com.n0texpecterr0r.topviewplayer.util.SongUtil;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;

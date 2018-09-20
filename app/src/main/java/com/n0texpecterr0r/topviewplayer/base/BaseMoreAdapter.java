@@ -60,7 +60,6 @@ public abstract class BaseMoreAdapter<T> extends RecyclerView.Adapter implements
 
     public void addDatas(List<T> datas) {
         mDatas.addAll(datas);
-        Log.d("OnlineModel", datas.size() + "");
         notifyDataSetChanged();
     }
 

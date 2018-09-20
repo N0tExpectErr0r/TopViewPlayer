@@ -4,7 +4,7 @@ import android.util.Log;
 import com.n0texpecterr0r.topviewplayer.R;
 import com.n0texpecterr0r.topviewplayer.base.BaseAdapter;
 import com.n0texpecterr0r.topviewplayer.base.CommonViewHolder;
-import com.n0texpecterr0r.topviewplayer.online.bean.Song;
+import com.n0texpecterr0r.topviewplayer.base.Song;
 import com.n0texpecterr0r.topviewplayer.util.TextUtil;
 import java.util.Collections;
 import java.util.Comparator;
@@ -41,12 +41,10 @@ public class LocalSongAdapter extends BaseAdapter<Song> {
             char ch = TextUtil.getPingYin(song.getName()).charAt(0);
             if (ch >= 'A' && ch <= 'Z') {
                 if (mCharIndexs.get(ch) == null) {
-                    Log.d("PinYin", ch + "");
                     mCharIndexs.put(ch, i);
                 }
             } else {
                 if (mCharIndexs.get('#') == null) {
-                    Log.d("PinYin", "#");
                     mCharIndexs.put('#', i);
                 }
             }

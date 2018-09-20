@@ -1,4 +1,4 @@
-package com.n0texpecterr0r.topviewplayer.online.bean;
+package com.n0texpecterr0r.topviewplayer.base;
 
 import com.google.gson.annotations.SerializedName;
 

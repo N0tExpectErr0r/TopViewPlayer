@@ -8,7 +8,9 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import com.n0texpecterr0r.topviewplayer.IPlayerService;
+import com.n0texpecterr0r.topviewplayer.util.SongListManager;
 import java.io.IOException;
 
 /**
@@ -25,10 +27,12 @@ public class PlayerService extends Service {
         super.onCreate();
         mPlayer.setOnCompletionListener(new OnCompletionListener() {
             @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-
+            public void onCompletion(MediaPlayer mp) {
+                Intent intent = new Intent("com.n0texpecterr0r.topviewplayer.complete");
+                sendBroadcast(intent);
             }
         });
+
     }
 
     private Binder mBinder = new IPlayerService.Stub() {
@@ -85,5 +89,14 @@ public class PlayerService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mPlayer != null) {
+            mPlayer.stop();
+            mPlayer.release();
+        }
     }
 }

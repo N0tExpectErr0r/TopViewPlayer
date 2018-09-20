@@ -1,8 +1,10 @@
 package com.n0texpecterr0r.topviewplayer.bottom;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -10,16 +12,19 @@ import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.bumptech.glide.Glide;
+import com.n0texpecterr0r.topviewplayer.ContextApplication;
 import com.n0texpecterr0r.topviewplayer.IPlayerService;
 import com.n0texpecterr0r.topviewplayer.R;
-import com.n0texpecterr0r.topviewplayer.online.bean.Song;
+import com.n0texpecterr0r.topviewplayer.base.Song;
 import com.n0texpecterr0r.topviewplayer.player.PlayerService;
 import com.n0texpecterr0r.topviewplayer.util.SongListManager;
 import org.greenrobot.eventbus.EventBus;
@@ -38,6 +43,7 @@ public class BottomFragment extends Fragment implements OnClickListener {
     private TextView mTvArtist;
     private ImageView mIvAction;
     private IPlayerService mPlayerService;
+    private CompleteReceiver mReceiver;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -87,6 +93,11 @@ public class BottomFragment extends Fragment implements OnClickListener {
         super.onResume();
         initService();
         initView();
+        // 注册广播
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.n0texpecterr0r.topviewplayer.complete");
+        mReceiver = new CompleteReceiver();
+        getContext().registerReceiver(mReceiver,intentFilter);
     }
 
     private void initService() {
@@ -118,6 +129,7 @@ public class BottomFragment extends Fragment implements OnClickListener {
     public void onPause() {
         super.onPause();
         getContext().unbindService(mConnection);
+        getContext().unregisterReceiver(mReceiver);
     }
 
     @Override
@@ -138,6 +150,23 @@ public class BottomFragment extends Fragment implements OnClickListener {
             }
         } catch (RemoteException e) {
             e.printStackTrace();
+        }
+    }
+
+    private class CompleteReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            SongListManager manager = SongListManager.getInstance();
+            manager.next();
+            Song song = manager.getCurrentSong();
+            try {
+                mPlayerService.setSource(song.getPath());
+                mPlayerService.start();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            EventBus.getDefault().post(song);
         }
     }
 }

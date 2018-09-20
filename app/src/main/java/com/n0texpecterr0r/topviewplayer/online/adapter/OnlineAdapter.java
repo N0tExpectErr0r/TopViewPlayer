@@ -3,7 +3,7 @@ package com.n0texpecterr0r.topviewplayer.online.adapter;
 import com.n0texpecterr0r.topviewplayer.R;
 import com.n0texpecterr0r.topviewplayer.base.BaseMoreAdapter;
 import com.n0texpecterr0r.topviewplayer.base.CommonViewHolder;
-import com.n0texpecterr0r.topviewplayer.online.bean.Song;
+import com.n0texpecterr0r.topviewplayer.base.Song;
 import java.util.List;
 
 /**

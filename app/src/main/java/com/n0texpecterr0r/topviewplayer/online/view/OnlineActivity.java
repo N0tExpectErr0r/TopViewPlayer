@@ -14,7 +14,7 @@ import com.n0texpecterr0r.topviewplayer.base.MvpBaseActivity;
 import com.n0texpecterr0r.topviewplayer.base.OnMoreScrollListener;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract.OnlineView;
 import com.n0texpecterr0r.topviewplayer.online.adapter.OnlineAdapter;
-import com.n0texpecterr0r.topviewplayer.online.bean.Song;
+import com.n0texpecterr0r.topviewplayer.base.Song;
 import com.n0texpecterr0r.topviewplayer.online.presenter.OnlinePresenterImpl;
 import es.dmoral.toasty.Toasty;
 import java.util.ArrayList;

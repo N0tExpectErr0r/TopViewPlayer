@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract.OnlinePresenterCallback;
-import com.n0texpecterr0r.topviewplayer.online.bean.Song;
+import com.n0texpecterr0r.topviewplayer.base.Song;
 import com.n0texpecterr0r.topviewplayer.util.JsonUtil;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
