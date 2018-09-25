@@ -118,7 +118,11 @@ public class OnlineModelImpl implements OnlineContract.OnlineModel {
             @Override
             public List<Song> apply(Response response) throws Exception {
                 String json = JsonUtil.getNodeString(response.body().string(), "result.song_info.song_list");
-                return new Gson().fromJson(json, new TypeToken<List<Song>>() {}.getType());
+                List<Song> songList = new Gson().fromJson(json, new TypeToken<List<Song>>() {}.getType());
+                for (Song song : songList) {
+                    song.setOnline(true);
+                }
+                return songList;
             }
         });
     }

@@ -162,6 +162,11 @@ public class OnlineActivity extends MvpBaseActivity<OnlinePresenterImpl> impleme
         manager.setCurrentIndex(position);
         manager.setSongList(mAdapter.getDatas());
         Song song = manager.getCurrentSong();
+        try {
+            mPlayerService.pause();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         mPresenter.requestSongUrl(song);
         EventBus.getDefault().post(song);
     }
