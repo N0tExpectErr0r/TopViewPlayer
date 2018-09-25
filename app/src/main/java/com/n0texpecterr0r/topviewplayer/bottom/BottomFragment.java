@@ -43,7 +43,7 @@ public class BottomFragment extends Fragment implements OnClickListener {
     private TextView mTvArtist;
     private ImageView mIvAction;
     private IPlayerService mPlayerService;
-    private CompleteReceiver mReceiver;
+
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -93,11 +93,6 @@ public class BottomFragment extends Fragment implements OnClickListener {
         super.onResume();
         initService();
         initView();
-        // 注册广播
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("com.n0texpecterr0r.topviewplayer.complete");
-        mReceiver = new CompleteReceiver();
-        getContext().registerReceiver(mReceiver,intentFilter);
     }
 
     private void initService() {
@@ -111,7 +106,11 @@ public class BottomFragment extends Fragment implements OnClickListener {
         if (manager != null && !manager.isEmpty()) {
             // 恢复歌曲信息数据
             Song song = manager.getCurrentSong();
-            Glide.with(this).load(song.getImgUrl()).into(mIvCover);
+            Glide.with(this)
+                    .load(song.getImgUrl())
+                    .placeholder(R.drawable.ic_empty)
+                    .error(R.drawable.ic_empty)
+                    .into(mIvCover);
             mTvName.setText(song.getName());
             mTvArtist.setText(song.getArtist());
         }
@@ -119,7 +118,11 @@ public class BottomFragment extends Fragment implements OnClickListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void changeSong(Song song) {
-        Glide.with(this).load(song.getImgUrl()).into(mIvCover);
+        Glide.with(this)
+                .load(song.getImgUrl())
+                .placeholder(R.drawable.ic_empty)
+                .error(R.drawable.ic_empty)
+                .into(mIvCover);
         mTvName.setText(song.getName());
         mTvArtist.setText(song.getArtist());
         mIvAction.setImageResource(R.drawable.ic_pause);
@@ -129,7 +132,6 @@ public class BottomFragment extends Fragment implements OnClickListener {
     public void onPause() {
         super.onPause();
         getContext().unbindService(mConnection);
-        getContext().unregisterReceiver(mReceiver);
     }
 
     @Override
@@ -140,33 +142,18 @@ public class BottomFragment extends Fragment implements OnClickListener {
 
     @Override
     public void onClick(View v) {
-        try {
-            if (mPlayerService.isPlaying()) {
-                mPlayerService.pause();
-                mIvAction.setImageResource(R.drawable.ic_play);
-            } else {
-                mPlayerService.start();
-                mIvAction.setImageResource(R.drawable.ic_pause);
-            }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private class CompleteReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            SongListManager manager = SongListManager.getInstance();
-            manager.next();
-            Song song = manager.getCurrentSong();
+        if (!SongListManager.getInstance().isEmpty()) {
             try {
-                mPlayerService.setSource(song.getPath());
-                mPlayerService.start();
+                if (mPlayerService.isPlaying()) {
+                    mPlayerService.pause();
+                    mIvAction.setImageResource(R.drawable.ic_play);
+                } else {
+                    mPlayerService.start();
+                    mIvAction.setImageResource(R.drawable.ic_pause);
+                }
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
-            EventBus.getDefault().post(song);
         }
     }
 }

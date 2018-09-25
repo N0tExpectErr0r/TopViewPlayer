@@ -1,6 +1,7 @@
 package com.n0texpecterr0r.topviewplayer.online.presenter;
 
 import com.n0texpecterr0r.topviewplayer.base.MvpBasePresenter;
+import com.n0texpecterr0r.topviewplayer.base.SongUrl;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract.OnlineModel;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract.OnlinePresenter;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract.OnlinePresenterCallback;
@@ -40,8 +41,18 @@ public class OnlinePresenterImpl extends MvpBasePresenter<OnlineView>
     }
 
     @Override
+    public void solveSongUrl(SongUrl songUrl) {
+        mView.playSong(songUrl);
+    }
+
+    @Override
     public void getOnlineSongs(String query, int pageNo) {
         mView.showLoading();
         mModel.getOnlineSongs(query,pageNo,this);
+    }
+
+    @Override
+    public void requestSongUrl(Song song) {
+        mModel.requestSongUrl(song,this);
     }
 }

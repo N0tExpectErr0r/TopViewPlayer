@@ -45,6 +45,10 @@ public abstract class BaseMoreAdapter<T> extends RecyclerView.Adapter implements
         }
     }
 
+    public List<T> getDatas() {
+        return mDatas;
+    }
+
     public void setDatas(List<T> datas) {
         mDatas = datas;
         notifyDataSetChanged();

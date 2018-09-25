@@ -149,7 +149,11 @@ public class BannerView extends FrameLayout implements ViewPager.OnPageChangeLis
                 }
             });
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            Glide.with(getContext()).load(mFocusList.get(caculatePosition(position)).getImgUrl()).into(imageView);
+            Glide.with(getContext())
+                    .load(mFocusList.get(caculatePosition(position)).getImgUrl())
+                    .placeholder(R.drawable.ic_mock)
+                    .error(R.drawable.ic_mock)
+                    .into(imageView);
             container.addView(imageView);
             return imageView;
         }

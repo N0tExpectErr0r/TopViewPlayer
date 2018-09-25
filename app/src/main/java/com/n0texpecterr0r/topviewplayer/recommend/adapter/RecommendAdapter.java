@@ -135,7 +135,11 @@ public class RecommendAdapter extends RecyclerView.Adapter<CommonViewHolder> {
                 holder.setText(R.id.recommend_tv_title, recommend.getTitle());
                 holder.setText(R.id.recommend_tv_desc, recommend.getDesc());
                 imageView = holder.getView(R.id.recommend_iv_image);
-                Glide.with(mContext).load(recommend.getImgUrl()).into(imageView);
+                Glide.with(mContext)
+                        .load(recommend.getImgUrl())
+                        .placeholder(R.drawable.ic_mock)
+                        .error(R.drawable.ic_mock)
+                        .into(imageView);
                 holder.itemView.setTag(position - 2);
                 break;
             case TYPE_ALBUM_HEADER:
@@ -147,7 +151,11 @@ public class RecommendAdapter extends RecyclerView.Adapter<CommonViewHolder> {
                 holder.setText(R.id.recommend_tv_title, recommend.getTitle());
                 holder.setText(R.id.recommend_tv_desc, recommend.getDesc());
                 imageView = holder.getView(R.id.recommend_iv_image);
-                Glide.with(mContext).load(recommend.getImgUrl()).into(imageView);
+                Glide.with(mContext)
+                        .load(recommend.getImgUrl())
+                        .placeholder(R.drawable.ic_mock)
+                        .error(R.drawable.ic_mock)
+                        .into(imageView);
                 holder.itemView.setTag(position - 3);
                 break;
             case TYPE_SONG_HEADER:
@@ -159,7 +167,11 @@ public class RecommendAdapter extends RecyclerView.Adapter<CommonViewHolder> {
                 holder.setText(R.id.recommend_tv_title, recommend.getTitle());
                 holder.setText(R.id.recommend_tv_desc, recommend.getDesc());
                 imageView = holder.getView(R.id.recommend_iv_image);
-                Glide.with(mContext).load(recommend.getImgUrl()).into(imageView);
+                Glide.with(mContext)
+                        .load(recommend.getImgUrl())
+                        .placeholder(R.drawable.ic_mock)
+                        .error(R.drawable.ic_mock)
+                        .into(imageView);
                 holder.itemView.setTag(position - 4);
                 break;
             default:
