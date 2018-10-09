@@ -25,13 +25,19 @@
         </activity>
         <activity android:name=".online.view.OnlineActivity">
         </activity>
-        <service android:process=":remote"
-            android:name=".player.PlayerService">
+
+        <service
+            android:name=".player.PlayerService"
+            android:process=":remote">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>
+
                 <action android:name="com.n0texpecterr0r.topviewplayer.PlayerService"/>
             </intent-filter>
         </service>
+
+        <activity android:name=".detail.DetailActivity">
+        </activity>
     </application>
 
 </manifest>

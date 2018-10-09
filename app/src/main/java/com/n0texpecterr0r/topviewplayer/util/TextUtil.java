@@ -1,6 +1,8 @@
 package com.n0texpecterr0r.topviewplayer.util;
 
 import android.util.Log;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
@@ -48,4 +50,14 @@ public class TextUtil {
         return output;
     }
 
+    /**
+     * 将时间转换为mm:ss
+     * @param duration
+     * @return
+     */
+    public static String getTimeStr(int duration){
+        Date date = new Date(duration);
+        SimpleDateFormat timeFormat = new SimpleDateFormat("mm:ss");
+        return timeFormat.format(date);
+    }
 }

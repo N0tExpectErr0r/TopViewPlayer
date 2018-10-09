@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
@@ -25,6 +26,7 @@ import com.n0texpecterr0r.topviewplayer.ContextApplication;
 import com.n0texpecterr0r.topviewplayer.IPlayerService;
 import com.n0texpecterr0r.topviewplayer.R;
 import com.n0texpecterr0r.topviewplayer.base.Song;
+import com.n0texpecterr0r.topviewplayer.detail.DetailActivity;
 import com.n0texpecterr0r.topviewplayer.player.PlayerService;
 import com.n0texpecterr0r.topviewplayer.util.SongListManager;
 import org.greenrobot.eventbus.EventBus;
@@ -37,7 +39,7 @@ import org.greenrobot.eventbus.ThreadMode;
  * @describe TODO
  */
 public class BottomFragment extends Fragment implements OnClickListener {
-
+    private LinearLayout mLlBottomBar;
     private ImageView mIvCover;
     private TextView mTvName;
     private TextView mTvArtist;
@@ -82,9 +84,16 @@ public class BottomFragment extends Fragment implements OnClickListener {
         mIvAction = view.findViewById(R.id.bottom_iv_action);
         mTvName = view.findViewById(R.id.bottom_tv_name);
         mTvArtist = view.findViewById(R.id.bottom_tv_artist);
-
+        mLlBottomBar = view.findViewById(R.id.bottom_ll_bottombar);
         mIvAction.setOnClickListener(this);
-
+        mLlBottomBar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!SongListManager.getInstance().isEmpty()) {
+                    DetailActivity.actionStart(getContext());
+                }
+            }
+        });
         return view;
     }
 

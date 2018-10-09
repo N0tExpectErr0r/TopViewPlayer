@@ -7,6 +7,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
+import android.support.v7.widget.SearchView.SearchAutoComplete;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -64,8 +65,8 @@ public class SearchActivity extends MvpBaseActivity<SearchPresenterImpl> impleme
             }
         });
         // 设置字体大小
-        android.support.v7.widget.SearchView.SearchAutoComplete searchTextArea =
-                mSvSearch.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        SearchAutoComplete searchTextArea =
+                mSvSearch.findViewById(R.id.search_src_text);
         searchTextArea.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
 
         return super.onCreateOptionsMenu(menu);

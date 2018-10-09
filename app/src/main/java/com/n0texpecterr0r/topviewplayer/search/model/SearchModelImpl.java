@@ -62,6 +62,7 @@ public class SearchModelImpl implements SearchModel {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         callback.error();
+                        throwable.printStackTrace();
                     }
                 });
     }
