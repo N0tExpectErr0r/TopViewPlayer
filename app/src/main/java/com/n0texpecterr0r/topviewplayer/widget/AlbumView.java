@@ -1,8 +1,13 @@
 package com.n0texpecterr0r.topviewplayer.widget;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -11,7 +16,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * @describe TODO
  */
 public class AlbumView extends CircleImageView {
+
     private boolean isPause;
+    private ObjectAnimator mRotateAnimator;
 
     public AlbumView(Context context) {
         super(context);
@@ -32,5 +39,18 @@ public class AlbumView extends CircleImageView {
         setBorderColor(Color.parseColor("#212121"));
         setBorderWidth(120);
         setScaleType(ScaleType.CENTER_CROP);
+        mRotateAnimator = ObjectAnimator.ofFloat(this, "rotation", 0F, 360F)
+                .setDuration(15000);
+        mRotateAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        mRotateAnimator.start();
+    }
+
+    public void setPause(boolean isPause){
+        this.isPause = isPause;
+        if (isPause){
+            mRotateAnimator.pause();
+        }else {
+            mRotateAnimator.resume();
+        }
     }
 }

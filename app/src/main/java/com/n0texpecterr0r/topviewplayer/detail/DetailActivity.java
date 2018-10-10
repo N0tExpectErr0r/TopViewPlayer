@@ -104,8 +104,10 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
         try {
             if (mPlayerService.isPlaying()) {
                 mIvAction.setImageResource(R.drawable.ic_pause_white);
+                mAvAlbum.setPause(false);
             } else {
                 mIvAction.setImageResource(R.drawable.ic_play_white);
+                mAvAlbum.setPause(true);
             }
             duration = mPlayerService.getDuration();
             current = mPlayerService.getCurrentTime();
@@ -211,6 +213,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
         mTvName.setText(song.getName());
         mTvArtist.setText(song.getArtist());
         mIvAction.setImageResource(R.drawable.ic_pause_white);
+        mAvAlbum.setPause(false);
         mSbTimebar.setProgress(0);
         mSbTimebar.setMax(duration);
         mTvCurrent.setText("00:00");
@@ -263,9 +266,11 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
             if (mPlayerService.isPlaying()) {
                 mPlayerService.pause();
                 mIvAction.setImageResource(R.drawable.ic_play_white);
+                mAvAlbum.setPause(true);
             } else {
                 mPlayerService.start();
                 mIvAction.setImageResource(R.drawable.ic_pause_white);
+                mAvAlbum.setPause(false);
             }
         } catch (RemoteException e) {
             e.printStackTrace();

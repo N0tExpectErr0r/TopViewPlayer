@@ -74,10 +74,8 @@ public class OnlineModelImpl implements OnlineContract.OnlineModel {
             public Song apply(Response response) throws Exception {
                 String json = response.body().string();
                 String urlJson = JsonUtil.getNodeString(json,"songurl.url");
-                Log.d("SongPicUrl", urlJson);
                 List<SongUrl> songUrl = new Gson().fromJson(urlJson,new TypeToken<List<SongUrl>>(){}.getType());
                 String picJson = JsonUtil.getNodeString(json,"songinfo");
-
                 SongPicUrl picUrl = new Gson().fromJson(picJson,SongPicUrl.class);
                 song.setPath(songUrl.get(0).getPath());
                 song.setImgUrl(picUrl.getPicUrl());
