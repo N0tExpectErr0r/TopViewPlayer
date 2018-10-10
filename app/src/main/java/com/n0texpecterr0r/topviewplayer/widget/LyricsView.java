@@ -11,7 +11,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -175,8 +174,9 @@ public class LyricsView extends View {
             mCurrentPaint.getTextBounds(text, 0, text.length(), bounds);
             canvas.drawText(text, mWidth / 2 - bounds.width() / 2, mHeight / 2 - bounds.height() / 2, mCurrentPaint);
         } else {
-            if(!isMoving)
+            if (!isMoving) {
                 getCurrentPosition();
+            }
             drawLyrics(canvas);
             float offset = mCurrentPosition * 80;
             setScrollY((int) offset);
@@ -256,7 +256,7 @@ public class LyricsView extends View {
                 if (Math.abs(offsetY) > touchSlop) {
                     isMoving = true;
                     int lineOffset = offsetY / 80;
-                    Log.d("onTouchEvent",lineOffset+"");
+                    Log.d("onTouchEvent", lineOffset + "");
                     mCurrentPosition = mLastPosition - lineOffset;
                     if (mCurrentPosition > mLyricsList.size() - 1) {
                         mCurrentPosition = mLyricsList.size() - 1;
@@ -269,10 +269,10 @@ public class LyricsView extends View {
                 break;
             case ACTION_UP:
             case ACTION_CANCEL:
-                if (mOnSeekListener != null) {
-                    mOnSeekListener.onSeek(mLyricsList.get(mCurrentPosition).getStart());
-                }
                 if (isMoving) {
+                    if (mOnSeekListener != null) {
+                        mOnSeekListener.onSeek(mLyricsList.get(mCurrentPosition).getStart());
+                    }
                     isMoving = false;
                     return false;
                 }
