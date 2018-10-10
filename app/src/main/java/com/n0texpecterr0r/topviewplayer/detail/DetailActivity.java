@@ -16,6 +16,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -141,6 +142,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
         }
         Glide.with(this)
                 .load(song.getImgUrl())
+                .dontAnimate()
                 .into(mAvAlbum);
     }
 
@@ -244,6 +246,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
         requestSongLrc(song.getLrcLink());
         Glide.with(this)
                 .load(song.getImgUrl())
+                .dontAnimate()
                 .into(mAvAlbum);
     }
 
@@ -252,6 +255,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
         public void handleMessage(Message msg) {
             try {
                 int currentTime = mPlayerService.getCurrentTime();
+                Log.d( "currentTime",TextUtil.getTimeStr(currentTime));
                 mTvCurrent.setText(TextUtil.getTimeStr(currentTime));
                 mSbTimebar.setProgress(currentTime);
             } catch (RemoteException e) {
@@ -325,6 +329,8 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
                 mPlayerService.setSource(prevSong.getPath());
                 mPlayerService.start();
             } else {
+                mPlayerService.seekTo(0);
+                mPlayerService.pause();
                 mLvLrcView.setLyricsText(null);
                 requestOnlineSong(prevSong);
             }
@@ -350,6 +356,8 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
                 mPlayerService.start();
                 changeSong(nextSong);
             } else {
+                mPlayerService.seekTo(0);
+                mPlayerService.pause();
                 mLvLrcView.setLyricsText(null);
                 requestOnlineSong(nextSong);
             }

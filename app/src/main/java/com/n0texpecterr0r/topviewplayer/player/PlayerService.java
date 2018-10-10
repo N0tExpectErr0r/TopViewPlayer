@@ -64,7 +64,7 @@ public class PlayerService extends Service {
 
         @Override
         public void seekTo(int time) throws RemoteException {
-            if (time > 0 && time < mPlayer.getDuration()) {
+            if (time >= 0 && time < mPlayer.getDuration()) {
                 mPlayer.seekTo(time);
             }
         }

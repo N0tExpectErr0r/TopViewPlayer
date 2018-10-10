@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textSize="18sp"
-            android:textColor="#212121"
+            android:textColor="#888888"
             android:visibility="gone"
             android:gravity="center"
             android:text="未找到本地音乐"/>
