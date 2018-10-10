@@ -1,17 +1,23 @@
 package com.n0texpecterr0r.topviewplayer.widget;
 
+import static android.view.MotionEvent.ACTION_CANCEL;
+import static android.view.MotionEvent.ACTION_DOWN;
+import static android.view.MotionEvent.ACTION_MOVE;
+import static android.view.MotionEvent.ACTION_UP;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.Style;
 import android.graphics.Rect;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import com.n0texpecterr0r.topviewplayer.IPlayerService;
 import com.n0texpecterr0r.topviewplayer.R;
 import com.n0texpecterr0r.topviewplayer.bean.Lyrics;
@@ -36,6 +42,10 @@ public class LyricsView extends View {
     private IPlayerService mPlayer;
     private int mCurrentPosition;
     private int mLastPosition;
+
+    private float mLastY;
+    private boolean isMoving = false;
+    private OnSeekListener mOnSeekListener;
 
     public LyricsView(Context context) {
         super(context);
@@ -81,6 +91,7 @@ public class LyricsView extends View {
     public void setLyricsText(String lyricsText) {
         try {
             mLyricsList = new LyricsDecoder().decodeLyrics(lyricsText);
+            invalidate();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -158,26 +169,18 @@ public class LyricsView extends View {
             mWidth = getMeasuredWidth();
             mHeight = getMeasuredHeight();
         }
-        getCurrentPosition();
-
-        int currentMillis = 0;
-        try {
-            currentMillis = mPlayer.getCurrentTime();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
         if (mLyricsList == null || mLyricsList.size() == 0) {
             Rect bounds = new Rect();
             String text = "暂无歌词";
             mCurrentPaint.getTextBounds(text, 0, text.length(), bounds);
             canvas.drawText(text, mWidth / 2 - bounds.width() / 2, mHeight / 2 - bounds.height() / 2, mCurrentPaint);
         } else {
+            if(!isMoving)
+                getCurrentPosition();
             drawLyrics(canvas);
-            long start = mLyricsList.get(mCurrentPosition).getStart();
-            float offset = (currentMillis - start) > 500 ? mCurrentPosition * 80
-                    : mLastPosition * 80 + (mCurrentPosition - mLastPosition) * 80 * ((currentMillis - start) / 500f);
+            float offset = mCurrentPosition * 80;
             setScrollY((int) offset);
-            if (getScrollY() == mCurrentPosition * 80) {
+            if (getScrollY() == mCurrentPosition * 80 && !isMoving) {
                 mLastPosition = mCurrentPosition;
             }
             postInvalidateDelayed(100);
@@ -238,8 +241,58 @@ public class LyricsView extends View {
 
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        float y = event.getY();
+        switch (event.getAction()) {
+            case ACTION_DOWN:
+                mLastY = y;
+                mLastPosition = mCurrentPosition;
+                invalidate();
+                break;
+            case ACTION_MOVE:
+                int touchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
+                int offsetY = (int) (y - mLastY);
+                if (Math.abs(offsetY) > touchSlop) {
+                    isMoving = true;
+                    int lineOffset = offsetY / 80;
+                    Log.d("onTouchEvent",lineOffset+"");
+                    mCurrentPosition = mLastPosition - lineOffset;
+                    if (mCurrentPosition > mLyricsList.size() - 1) {
+                        mCurrentPosition = mLyricsList.size() - 1;
+                    }
+                    if (mCurrentPosition < 0) {
+                        mCurrentPosition = 0;
+                    }
+                }
+                invalidate();
+                break;
+            case ACTION_UP:
+            case ACTION_CANCEL:
+                if (mOnSeekListener != null) {
+                    mOnSeekListener.onSeek(mLyricsList.get(mCurrentPosition).getStart());
+                }
+                if (isMoving) {
+                    isMoving = false;
+                    return false;
+                }
+                invalidate();
+                break;
+        }
+        return super.onTouchEvent(event);
+    }
+
     public static int sp2px(Context context, float spValue) {
         float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
+    }
+
+    public void setOnSeekListener(OnSeekListener onSeekListener) {
+        mOnSeekListener = onSeekListener;
+    }
+
+    public interface OnSeekListener {
+
+        void onSeek(long startTime);
     }
 }

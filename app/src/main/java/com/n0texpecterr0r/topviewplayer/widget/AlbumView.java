@@ -40,7 +40,7 @@ public class AlbumView extends CircleImageView {
         setBorderWidth(120);
         setScaleType(ScaleType.CENTER_CROP);
         mRotateAnimator = ObjectAnimator.ofFloat(this, "rotation", 0F, 360F)
-                .setDuration(15000);
+                .setDuration(20000);
         mRotateAnimator.setRepeatCount(ValueAnimator.INFINITE);
         mRotateAnimator.start();
     }

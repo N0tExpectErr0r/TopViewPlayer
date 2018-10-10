@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                 String json = response.body().string();
                 String urlJson = JsonUtil.getNodeString(json,"songurl.url");
                 List<SongUrl> songUrl = new Gson().fromJson(urlJson,new TypeToken<List<SongUrl>>(){}.getType());
-                String picJson = JsonUtil.getNodeString(json,"songurl.songinfo");
+                String picJson = JsonUtil.getNodeString(json,"songinfo");
                 SongPicUrl picUrl = new Gson().fromJson(picJson,SongPicUrl.class);
                 song.setPath(songUrl.get(0).getPath());
                 song.setImgUrl(picUrl.getPicUrl());
@@ -178,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
                         Toasty.error(MainActivity.this,"网络出现错误，请检查网络设置").show();
                     }
                 });

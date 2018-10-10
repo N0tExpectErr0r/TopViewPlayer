@@ -53,8 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="50dp"
-            android:src="@drawable/ic_empty"
-            android:visibility="gone"/>
+            android:src="@drawable/ic_empty"/>
         <com.n0texpecterr0r.topviewplayer.widget.LyricsView
             android:id="@+id/detail_lv_lrcview"
             android:layout_width="match_parent"
@@ -62,7 +61,8 @@
             android:layout_marginTop="30dp"
             android:layout_marginBottom="30dp"
             app:currentColor="@color/colorPrimary"
-            app:normalColor="#D7D7D7"/>
+            app:normalColor="#D7D7D7"
+            android:visibility="gone"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

@@ -5,17 +5,17 @@ import static com.n0texpecterr0r.topviewplayer.util.ModeManager.MODE_DEFAULT;
 import static com.n0texpecterr0r.topviewplayer.util.ModeManager.MODE_RANDOM;
 import static com.n0texpecterr0r.topviewplayer.util.ModeManager.MODE_SINGLE;
 
+import android.animation.ObjectAnimator;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -39,6 +39,7 @@ import com.n0texpecterr0r.topviewplayer.util.SongListManager;
 import com.n0texpecterr0r.topviewplayer.util.TextUtil;
 import com.n0texpecterr0r.topviewplayer.widget.AlbumView;
 import com.n0texpecterr0r.topviewplayer.widget.LyricsView;
+import com.n0texpecterr0r.topviewplayer.widget.LyricsView.OnSeekListener;
 import es.dmoral.toasty.Toasty;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -49,7 +50,6 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import java.util.List;
-import java.util.concurrent.RejectedExecutionHandler;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -58,7 +58,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class DetailActivity extends AppCompatActivity implements OnClickListener{
+public class DetailActivity extends AppCompatActivity implements OnClickListener {
+
     private ImageView mIvBack;
     private ImageView mIvMode;
     private ImageView mIvPrev;
@@ -75,8 +76,8 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
     private IPlayerService mPlayerService;
     private Disposable mRequest;
 
-    public static void actionStart(Context context){
-        Intent intent = new Intent(context,DetailActivity.class);
+    public static void actionStart(Context context) {
+        Intent intent = new Intent(context, DetailActivity.class);
         context.startActivity(intent);
     }
 
@@ -89,7 +90,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
             // 初始化界面
             initView();
             // 开始定时更新UI
-            mUpdateTimeHandler.sendEmptyMessageDelayed(1,100);
+            mUpdateTimeHandler.sendEmptyMessageDelayed(1, 100);
         }
 
         @Override
@@ -127,7 +128,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
         requestSongLrc(song.getLrcLink());
 
         ModeManager modeManager = ModeManager.getInstance();
-        switch (modeManager.getCurrentMode()){
+        switch (modeManager.getCurrentMode()) {
             case MODE_DEFAULT:
                 mIvMode.setImageResource(R.drawable.ic_default);
                 break;
@@ -189,6 +190,19 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
                 }
             }
         });
+
+        // 歌词View滑动监听
+        mLvLrcView.setOnSeekListener(new OnSeekListener() {
+            @Override
+            public void onSeek(long startTime) {
+                try {
+                    mPlayerService.seekTo((int) startTime);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         // 播放暂停键监听
         mIvAction.setOnClickListener(this);
         // 下一首监听
@@ -199,6 +213,10 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
         mIvMode.setOnClickListener(this);
         // 返回
         mIvBack.setOnClickListener(this);
+        // 专辑界面
+        mAvAlbum.setOnClickListener(this);
+        // 歌词界面
+        mLvLrcView.setOnClickListener(this);
     }
 
     @Override
@@ -211,7 +229,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
     public void changeSong(Song song) {
         int duration = 0;
         try {
-             duration = mPlayerService.getDuration();
+            duration = mPlayerService.getDuration();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -229,7 +247,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
                 .into(mAvAlbum);
     }
 
-    private Handler mUpdateTimeHandler = new Handler(){
+    private Handler mUpdateTimeHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             try {
@@ -239,13 +257,13 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
-            sendEmptyMessageDelayed(1,100);
+            sendEmptyMessageDelayed(1, 100);
         }
     };
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.detail_iv_action:
                 playAndPause();
                 break;
@@ -260,6 +278,14 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
                 break;
             case R.id.detail_iv_back:
                 finish();
+                break;
+            case R.id.detail_av_album:
+                mLvLrcView.setVisibility(View.VISIBLE);
+                mAvAlbum.setVisibility(View.GONE);
+                break;
+            case R.id.detail_lv_lrcview:
+                mAvAlbum.setVisibility(View.VISIBLE);
+                mLvLrcView.setVisibility(View.GONE);
                 break;
         }
     }
@@ -287,8 +313,9 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
      * 上一首
      */
     private void prevSong() {
-        if (mRequest!=null && !mRequest.isDisposed())
+        if (mRequest != null && !mRequest.isDisposed()) {
             mRequest.dispose();
+        }
         SongListManager manager = SongListManager.getInstance();
         manager.prev();
         Song prevSong = manager.getCurrentSong();
@@ -297,7 +324,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
             if (!prevSong.isOnline()) {
                 mPlayerService.setSource(prevSong.getPath());
                 mPlayerService.start();
-            }else{
+            } else {
                 mLvLrcView.setLyricsText(null);
                 requestOnlineSong(prevSong);
             }
@@ -310,8 +337,9 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
      * 下一首
      */
     private void nextSong() {
-        if (mRequest!=null && !mRequest.isDisposed())
+        if (mRequest != null && !mRequest.isDisposed()) {
             mRequest.dispose();
+        }
         SongListManager manager = SongListManager.getInstance();
         manager.next();
         Song nextSong = manager.getCurrentSong();
@@ -321,7 +349,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
                 mPlayerService.setSource(nextSong.getPath());
                 mPlayerService.start();
                 changeSong(nextSong);
-            }else{
+            } else {
                 mLvLrcView.setLyricsText(null);
                 requestOnlineSong(nextSong);
             }
@@ -336,17 +364,17 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
     private void changeMode() {
         ModeManager modeManager = ModeManager.getInstance();
         modeManager.changeMode();
-        switch (modeManager.getCurrentMode()){
+        switch (modeManager.getCurrentMode()) {
             case MODE_DEFAULT:
-                Toasty.info(this,"顺序播放").show();
+                Toasty.info(this, "顺序播放").show();
                 mIvMode.setImageResource(R.drawable.ic_default);
                 break;
             case MODE_RANDOM:
-                Toasty.info(this,"随机播放").show();
+                Toasty.info(this, "随机播放").show();
                 mIvMode.setImageResource(R.drawable.ic_random);
                 break;
             case MODE_SINGLE:
-                Toasty.info(this,"单曲循环").show();
+                Toasty.info(this, "单曲循环").show();
                 mIvMode.setImageResource(R.drawable.ic_single);
                 break;
         }
@@ -354,7 +382,6 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
 
     /**
      * 请求网络歌曲
-     * @param song
      */
     private void requestOnlineSong(final Song song) {
         mRequest = Observable.create(new ObservableOnSubscribe<Response>() {
@@ -363,7 +390,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
                         .url(MusicApi.Song.songInfo(song.getSongId()))
-                        .addHeader("User-Agent",USER_AGENT)
+                        .addHeader("User-Agent", USER_AGENT)
                         .get()
                         .build();
                 Call call = client.newCall(request);
@@ -374,10 +401,11 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
             @Override
             public Song apply(Response response) throws Exception {
                 String json = response.body().string();
-                String urlJson = JsonUtil.getNodeString(json,"songurl.url");
-                List<SongUrl> songUrl = new Gson().fromJson(urlJson,new TypeToken<List<SongUrl>>(){}.getType());
-                String picJson = JsonUtil.getNodeString(json,"songinfo");
-                SongPicUrl picUrl = new Gson().fromJson(picJson,SongPicUrl.class);
+                String urlJson = JsonUtil.getNodeString(json, "songurl.url");
+                List<SongUrl> songUrl = new Gson().fromJson(urlJson, new TypeToken<List<SongUrl>>() {
+                }.getType());
+                String picJson = JsonUtil.getNodeString(json, "songinfo");
+                SongPicUrl picUrl = new Gson().fromJson(picJson, SongPicUrl.class);
                 song.setPath(songUrl.get(0).getPath());
                 song.setImgUrl(picUrl.getPicUrl());
                 return song;
@@ -394,7 +422,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Toasty.error(DetailActivity.this,"网络出现错误，请检查网络设置").show();
+                        Toasty.error(DetailActivity.this, "网络出现错误，请检查网络设置").show();
                     }
                 });
     }
