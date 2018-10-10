@@ -43,10 +43,17 @@
                 android:textSize="14sp"/>
         </LinearLayout>
     </LinearLayout>
-    <View
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1">
+        <com.n0texpecterr0r.topviewplayer.widget.AlbumView
+            android:id="@+id/detail_av_album"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="50dp"
+            android:src="@drawable/ic_empty"/>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -54,11 +61,12 @@
             android:id="@+id/detail_tv_current"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="24dp"
             android:textColor="#F0F0F0"
+            android:textSize="13sp"
             android:text="00:00"/>
         <SeekBar
-            android:id="@+id/detail_sv_timebar"
+            android:id="@+id/detail_sb_timebar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
@@ -66,8 +74,9 @@
             android:id="@+id/detail_tv_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="24dp"
             android:textColor="#F0F0F0"
+            android:textSize="13sp"
             android:text="00:00"/>
     </LinearLayout>
     <RelativeLayout
@@ -85,7 +94,7 @@
             android:layout_marginRight="30dp"/>
         <ImageView
             android:id="@+id/detail_iv_prev"
-            android:layout_width="36dp"
+            android:layout_width="32dp"
             android:layout_height="36dp"
             android:layout_toLeftOf="@id/detail_iv_action"
             android:layout_centerVertical="true"
@@ -93,14 +102,14 @@
             android:src="@drawable/ic_prev_white"/>
         <ImageView
             android:id="@+id/detail_iv_action"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerInParent="true"
             android:src="@drawable/ic_play_white"/>
         <ImageView
             android:id="@+id/detail_iv_next"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_toRightOf="@id/detail_iv_action"
             android:layout_centerVertical="true"
             android:layout_marginLeft="24dp"

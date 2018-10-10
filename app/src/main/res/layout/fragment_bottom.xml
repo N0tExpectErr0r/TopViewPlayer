@@ -50,7 +50,7 @@
             <ImageView
                 android:id="@+id/bottom_iv_action"
                 android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_height="match_parent"
                 android:layout_marginRight="20dp"
                 android:layout_gravity="right|center_vertical"
                 android:clickable="true"

@@ -21,25 +21,30 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
 import api.MusicApi;
+import api.MusicApi.Album;
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.n0texpecterr0r.topviewplayer.IPlayerService;
 import com.n0texpecterr0r.topviewplayer.IPlayerService.Stub;
 import com.n0texpecterr0r.topviewplayer.R;
 import com.n0texpecterr0r.topviewplayer.base.Song;
+import com.n0texpecterr0r.topviewplayer.base.SongPicUrl;
 import com.n0texpecterr0r.topviewplayer.base.SongUrl;
+import com.n0texpecterr0r.topviewplayer.main.view.MainActivity;
 import com.n0texpecterr0r.topviewplayer.player.PlayerService;
 import com.n0texpecterr0r.topviewplayer.util.JsonUtil;
 import com.n0texpecterr0r.topviewplayer.util.ModeManager;
 import com.n0texpecterr0r.topviewplayer.util.SongListManager;
 import com.n0texpecterr0r.topviewplayer.util.TextUtil;
+import com.n0texpecterr0r.topviewplayer.widget.AlbumView;
 import es.dmoral.toasty.Toasty;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -64,7 +69,9 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
     private TextView mTvCurrent;
     private TextView mTvDuration;
     private SeekBar mSbTimebar;
+    private AlbumView mAvAlbum;
     private IPlayerService mPlayerService;
+    private Disposable mRequest;
 
     public static void actionStart(Context context){
         Intent intent = new Intent(context,DetailActivity.class);
@@ -108,7 +115,6 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
         Song song = SongListManager.getInstance().getCurrentSong();
         mTvName.setText(song.getName());
         mTvArtist.setText(song.getArtist());
-
         mSbTimebar.setMax(duration);
         mSbTimebar.setProgress(current);
         mTvCurrent.setText(TextUtil.getTimeStr(current));
@@ -126,6 +132,9 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
                 mIvMode.setImageResource(R.drawable.ic_single);
                 break;
         }
+        Glide.with(this)
+                .load(song.getImgUrl())
+                .into(mAvAlbum);
     }
 
 
@@ -144,7 +153,8 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
         mTvArtist = findViewById(R.id.detail_tv_artist);
         mTvCurrent = findViewById(R.id.detail_tv_current);
         mTvDuration = findViewById(R.id.detail_tv_duration);
-        mSbTimebar = findViewById(R.id.detail_sv_timebar);
+        mSbTimebar = findViewById(R.id.detail_sb_timebar);
+        mAvAlbum = findViewById(R.id.detail_av_album);
 
         // 注册EventBus
         EventBus.getDefault().register(this);
@@ -205,6 +215,9 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
         mSbTimebar.setMax(duration);
         mTvCurrent.setText("00:00");
         mTvDuration.setText(TextUtil.getTimeStr(duration));
+        Glide.with(this)
+                .load(song.getImgUrl())
+                .into(mAvAlbum);
     }
 
     private Handler mUpdateTimeHandler = new Handler(){
@@ -263,9 +276,12 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
      * 上一首
      */
     private void prevSong() {
+        if (mRequest!=null && !mRequest.isDisposed())
+            mRequest.dispose();
         SongListManager manager = SongListManager.getInstance();
         manager.prev();
         Song prevSong = manager.getCurrentSong();
+        changeSong(prevSong);
         try {
             if (!prevSong.isOnline()) {
                 mPlayerService.setSource(prevSong.getPath());
@@ -276,27 +292,29 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        changeSong(prevSong);
     }
 
     /**
      * 下一首
      */
     private void nextSong() {
+        if (mRequest!=null && !mRequest.isDisposed())
+            mRequest.dispose();
         SongListManager manager = SongListManager.getInstance();
         manager.next();
         Song nextSong = manager.getCurrentSong();
+        changeSong(nextSong);
         try {
             if (!nextSong.isOnline()) {
                 mPlayerService.setSource(nextSong.getPath());
                 mPlayerService.start();
+                changeSong(nextSong);
             }else{
                 requestOnlineSong(nextSong);
             }
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        changeSong(nextSong);
     }
 
     /**
@@ -326,7 +344,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
      * @param song
      */
     private void requestOnlineSong(final Song song) {
-        Observable.create(new ObservableOnSubscribe<Response>() {
+        mRequest = Observable.create(new ObservableOnSubscribe<Response>() {
             @Override
             public void subscribe(ObservableEmitter<Response> emitter) throws Exception {
                 OkHttpClient client = new OkHttpClient();
@@ -339,19 +357,25 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
                 Response response = call.execute();
                 emitter.onNext(response);
             }
-        }).map(new Function<Response, SongUrl>() {
+        }).map(new Function<Response, Song>() {
             @Override
-            public SongUrl apply(Response response) throws Exception {
-                String json = JsonUtil.getNodeString(response.body().string(),"songurl.url");
-                List<SongUrl> songUrl = new Gson().fromJson(json,new TypeToken<List<SongUrl>>(){}.getType());
-                return songUrl.get(0);
+            public Song apply(Response response) throws Exception {
+                String json = response.body().string();
+                String urlJson = JsonUtil.getNodeString(json,"songurl.url");
+                List<SongUrl> songUrl = new Gson().fromJson(urlJson,new TypeToken<List<SongUrl>>(){}.getType());
+                String picJson = JsonUtil.getNodeString(json,"songinfo");
+                SongPicUrl picUrl = new Gson().fromJson(picJson,SongPicUrl.class);
+                song.setPath(songUrl.get(0).getPath());
+                song.setImgUrl(picUrl.getPicUrl());
+                return song;
             }
         }).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<SongUrl>() {
+                .subscribe(new Consumer<Song>() {
                     @Override
-                    public void accept(SongUrl songUrl) throws Exception {
-                        mPlayerService.setSource(songUrl.getPath());
+                    public void accept(Song song) throws Exception {
+                        changeSong(song);
+                        mPlayerService.setSource(song.getPath());
                         mPlayerService.start();
                     }
                 }, new Consumer<Throwable>() {

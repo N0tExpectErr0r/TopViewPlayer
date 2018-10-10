@@ -12,16 +12,16 @@ import java.util.List;
  */
 public class OnlineContract {
     public interface OnlineView extends MvpBaseView{
-        void addSong(List<Song> songList);
+        void addSongList(List<Song> songList);
         void loadCompelete();
-        void playSong(SongUrl url);
+        void playSong(Song song);
     }
 
     public interface OnlinePresenterCallback {
-        void solveSong(List<Song> songList);
+        void solveSongList(List<Song> songList);
         void error();
         void loadCompelete();
-        void solveSongUrl(SongUrl songUrl);
+        void solveSong(Song song);
     }
 
     public interface OnlinePresenter{

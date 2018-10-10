@@ -26,6 +26,7 @@ import com.google.gson.reflect.TypeToken;
 import com.n0texpecterr0r.topviewplayer.IPlayerService;
 import com.n0texpecterr0r.topviewplayer.R;
 import com.n0texpecterr0r.topviewplayer.base.Song;
+import com.n0texpecterr0r.topviewplayer.base.SongPicUrl;
 import com.n0texpecterr0r.topviewplayer.base.SongUrl;
 import com.n0texpecterr0r.topviewplayer.local.view.LocalFragment;
 import com.n0texpecterr0r.topviewplayer.main.adapter.ViewPagerAdapter;
@@ -128,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
             Song song = manager.getCurrentSong();
             try {
                 if (!song.isOnline()) {
+                    EventBus.getDefault().post(song);
                     mPlayerService.setSource(song.getPath());
                     mPlayerService.start();
                 }else{
@@ -136,7 +138,6 @@ public class MainActivity extends AppCompatActivity {
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
-            EventBus.getDefault().post(song);
         }
     }
 
@@ -154,19 +155,25 @@ public class MainActivity extends AppCompatActivity {
                 Response response = call.execute();
                 emitter.onNext(response);
             }
-        }).map(new Function<Response, SongUrl>() {
+        }).map(new Function<Response, Song>() {
             @Override
-            public SongUrl apply(Response response) throws Exception {
-                String json = JsonUtil.getNodeString(response.body().string(),"songurl.url");
-                List<SongUrl> songUrl = new Gson().fromJson(json,new TypeToken<List<SongUrl>>(){}.getType());
-                return songUrl.get(0);
+            public Song apply(Response response) throws Exception {
+                String json = response.body().string();
+                String urlJson = JsonUtil.getNodeString(json,"songurl.url");
+                List<SongUrl> songUrl = new Gson().fromJson(urlJson,new TypeToken<List<SongUrl>>(){}.getType());
+                String picJson = JsonUtil.getNodeString(json,"songurl.songinfo");
+                SongPicUrl picUrl = new Gson().fromJson(picJson,SongPicUrl.class);
+                song.setPath(songUrl.get(0).getPath());
+                song.setImgUrl(picUrl.getPicUrl());
+                return song;
             }
         }).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<SongUrl>() {
+                .subscribe(new Consumer<Song>() {
                     @Override
-                    public void accept(SongUrl songUrl) throws Exception {
-                        mPlayerService.setSource(songUrl.getPath());
+                    public void accept(Song song) throws Exception {
+                        EventBus.getDefault().post(song);
+                        mPlayerService.setSource(song.getPath());
                         mPlayerService.start();
                     }
                 }, new Consumer<Throwable>() {

@@ -150,12 +150,12 @@ public class LocalFragment extends MvpBaseFragment<LocalPresenterImpl> implement
         manager.setSongList(mAdapter.getDatas());
 
         Song song = manager.getCurrentSong();
+        EventBus.getDefault().post(song);
         try {
             mPlayerService.setSource(song.getPath());
             mPlayerService.start();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        EventBus.getDefault().post(song);
     }
 }

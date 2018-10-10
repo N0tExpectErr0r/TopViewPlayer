@@ -127,14 +127,14 @@ public class BottomFragment extends Fragment implements OnClickListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void changeSong(Song song) {
+        mTvName.setText(song.getName());
+        mTvArtist.setText(song.getArtist());
+        mIvAction.setImageResource(R.drawable.ic_pause);
         Glide.with(this)
                 .load(song.getImgUrl())
                 .placeholder(R.drawable.ic_empty)
                 .error(R.drawable.ic_empty)
                 .into(mIvCover);
-        mTvName.setText(song.getName());
-        mTvArtist.setText(song.getArtist());
-        mIvAction.setImageResource(R.drawable.ic_pause);
     }
 
     @Override

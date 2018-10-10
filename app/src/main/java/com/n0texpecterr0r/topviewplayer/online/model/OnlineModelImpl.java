@@ -2,16 +2,16 @@ package com.n0texpecterr0r.topviewplayer.online.model;
 
 import static com.n0texpecterr0r.topviewplayer.ContextApplication.USER_AGENT;
 
+import android.util.Log;
 import api.MusicApi;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.n0texpecterr0r.topviewplayer.base.SongPicUrl;
 import com.n0texpecterr0r.topviewplayer.base.SongUrl;
-import com.n0texpecterr0r.topviewplayer.main.view.MainActivity;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract.OnlinePresenterCallback;
 import com.n0texpecterr0r.topviewplayer.base.Song;
 import com.n0texpecterr0r.topviewplayer.util.JsonUtil;
-import es.dmoral.toasty.Toasty;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -23,6 +23,7 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Request.Builder;
 import okhttp3.Response;
 
 /**
@@ -39,7 +40,7 @@ public class OnlineModelImpl implements OnlineContract.OnlineModel {
                 .subscribe(new Consumer<List<Song>>() {
                     @Override
                     public void accept(List<Song> songList) throws Exception {
-                        callback.solveSong(songList);
+                        callback.solveSongList(songList);
                         if (songList.size() < 20) {
                             callback.loadCompelete();
                         }
@@ -59,7 +60,7 @@ public class OnlineModelImpl implements OnlineContract.OnlineModel {
             @Override
             public void subscribe(ObservableEmitter<Response> emitter) throws Exception {
                 OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder()
+                Request request = new Builder()
                         .url(MusicApi.Song.songInfo(song.getSongId()))
                         .addHeader("User-Agent",USER_AGENT)
                         .get()
@@ -68,19 +69,26 @@ public class OnlineModelImpl implements OnlineContract.OnlineModel {
                 Response response = call.execute();
                 emitter.onNext(response);
             }
-        }).map(new Function<Response, SongUrl>() {
+        }).map(new Function<Response, Song>() {
             @Override
-            public SongUrl apply(Response response) throws Exception {
-                String json = JsonUtil.getNodeString(response.body().string(),"songurl.url");
-                List<SongUrl> songUrl = new Gson().fromJson(json,new TypeToken<List<SongUrl>>(){}.getType());
-                return songUrl.get(0);
+            public Song apply(Response response) throws Exception {
+                String json = response.body().string();
+                String urlJson = JsonUtil.getNodeString(json,"songurl.url");
+                Log.d("SongPicUrl", urlJson);
+                List<SongUrl> songUrl = new Gson().fromJson(urlJson,new TypeToken<List<SongUrl>>(){}.getType());
+                String picJson = JsonUtil.getNodeString(json,"songinfo");
+
+                SongPicUrl picUrl = new Gson().fromJson(picJson,SongPicUrl.class);
+                song.setPath(songUrl.get(0).getPath());
+                song.setImgUrl(picUrl.getPicUrl());
+                return song;
             }
         }).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<SongUrl>() {
+                .subscribe(new Consumer<Song>() {
                     @Override
-                    public void accept(SongUrl songUrl) throws Exception {
-                        callback.solveSongUrl(songUrl);
+                    public void accept(Song song) throws Exception {
+                        callback.solveSong(song);
                     }
                 }, new Consumer<Throwable>() {
                     @Override

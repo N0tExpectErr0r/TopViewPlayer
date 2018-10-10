@@ -24,8 +24,8 @@ public class OnlinePresenterImpl extends MvpBasePresenter<OnlineView>
     }
 
     @Override
-    public void solveSong(List<Song> songList) {
-        mView.addSong(songList);
+    public void solveSongList(List<Song> songList) {
+        mView.addSongList(songList);
         mView.hideLoading();
     }
 
@@ -41,8 +41,8 @@ public class OnlinePresenterImpl extends MvpBasePresenter<OnlineView>
     }
 
     @Override
-    public void solveSongUrl(SongUrl songUrl) {
-        mView.playSong(songUrl);
+    public void solveSong(Song song) {
+        mView.playSong(song);
     }
 
     @Override

@@ -109,7 +109,7 @@ public class OnlineActivity extends MvpBaseActivity<OnlinePresenterImpl> impleme
     }
 
     @Override
-    public void addSong(List<Song> songList) {
+    public void addSongList(List<Song> songList) {
         mAdapter.addDatas(songList);
         mSrlRefresh.setEnabled(false);
     }
@@ -146,13 +146,14 @@ public class OnlineActivity extends MvpBaseActivity<OnlinePresenterImpl> impleme
     }
 
     @Override
-    public void playSong(SongUrl url) {
+    public void playSong(Song song) {
         try {
-            mPlayerService.setSource(url.getPath());
+            mPlayerService.setSource(song.getPath());
             mPlayerService.start();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+        EventBus.getDefault().post(song);
     }
 
     @Override
@@ -168,6 +169,5 @@ public class OnlineActivity extends MvpBaseActivity<OnlinePresenterImpl> impleme
             e.printStackTrace();
         }
         mPresenter.requestSongUrl(song);
-        EventBus.getDefault().post(song);
     }
 }
