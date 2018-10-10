@@ -74,7 +74,7 @@ public class LyricsView extends View {
         invalidate();
         mCurrentPaint = new Paint();
         mCurrentPaint.setColor(mCurrentColor);
-        mCurrentPaint.setTextSize(sp2px(getContext(), 16));
+        mCurrentPaint.setTextSize(sp2px(getContext(), 18));
         mCurrentPaint.setAntiAlias(true);
         mNormalPaint = new Paint();
         mNormalPaint.setColor(mNormalColor);
@@ -197,11 +197,12 @@ public class LyricsView extends View {
             Rect bounds = new Rect();
             String text = mLyricsList.get(i).getText();
             if (text != null) {
-                mCurrentPaint.getTextBounds(text, 0, text.length(), bounds);
                 if (i == mCurrentPosition) {
+                    mCurrentPaint.getTextBounds(text, 0, text.length(), bounds);
                     canvas.drawText(text, mWidth / 2 - bounds.width() / 2,
                             mHeight / 2 - bounds.height() / 2 + 80 * i, mCurrentPaint);
                 } else {
+                    mNormalPaint.getTextBounds(text, 0, text.length(), bounds);
                     canvas.drawText(text, mWidth / 2 - bounds.width() / 2,
                             mHeight / 2 - bounds.height() / 2 + 80 * i, mNormalPaint);
                 }
