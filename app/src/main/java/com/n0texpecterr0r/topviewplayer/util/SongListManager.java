@@ -4,10 +4,8 @@ import static com.n0texpecterr0r.topviewplayer.util.ModeManager.MODE_DEFAULT;
 import static com.n0texpecterr0r.topviewplayer.util.ModeManager.MODE_RANDOM;
 import static com.n0texpecterr0r.topviewplayer.util.ModeManager.MODE_SINGLE;
 
-import android.graphics.Paint;
-import android.util.Log;
 import com.n0texpecterr0r.topviewplayer.base.AbstractListManager;
-import com.n0texpecterr0r.topviewplayer.base.Song;
+import com.n0texpecterr0r.topviewplayer.bean.Song;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

@@ -1,8 +1,7 @@
 package com.n0texpecterr0r.topviewplayer.online;
 
 import com.n0texpecterr0r.topviewplayer.base.MvpBaseView;
-import com.n0texpecterr0r.topviewplayer.base.Song;
-import com.n0texpecterr0r.topviewplayer.base.SongUrl;
+import com.n0texpecterr0r.topviewplayer.bean.Song;
 import java.util.List;
 
 /**

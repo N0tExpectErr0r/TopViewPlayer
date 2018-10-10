@@ -2,15 +2,14 @@ package com.n0texpecterr0r.topviewplayer.online.model;
 
 import static com.n0texpecterr0r.topviewplayer.ContextApplication.USER_AGENT;
 
-import android.util.Log;
 import api.MusicApi;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.n0texpecterr0r.topviewplayer.base.SongPicUrl;
-import com.n0texpecterr0r.topviewplayer.base.SongUrl;
+import com.n0texpecterr0r.topviewplayer.bean.SongPicUrl;
+import com.n0texpecterr0r.topviewplayer.bean.SongUrl;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract.OnlinePresenterCallback;
-import com.n0texpecterr0r.topviewplayer.base.Song;
+import com.n0texpecterr0r.topviewplayer.bean.Song;
 import com.n0texpecterr0r.topviewplayer.util.JsonUtil;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;

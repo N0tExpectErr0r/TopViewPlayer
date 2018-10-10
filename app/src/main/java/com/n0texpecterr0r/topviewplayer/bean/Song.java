@@ -1,4 +1,4 @@
-package com.n0texpecterr0r.topviewplayer.base;
+package com.n0texpecterr0r.topviewplayer.bean;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -18,6 +18,8 @@ public class Song {
     private String imgUrl;
     @SerializedName("song_id")
     private String songId;
+    @SerializedName("lrclink")
+    private String lrcLink;
     private transient String path;
     private transient boolean isOnline;
 
@@ -75,5 +77,13 @@ public class Song {
 
     public void setSongId(String songId) {
         this.songId = songId;
+    }
+
+    public String getLrcLink() {
+        return lrcLink;
+    }
+
+    public void setLrcLink(String lrcLink) {
+        this.lrcLink = lrcLink;
     }
 }

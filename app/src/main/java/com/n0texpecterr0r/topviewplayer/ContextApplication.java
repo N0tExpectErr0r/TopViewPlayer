@@ -1,24 +1,10 @@
 package com.n0texpecterr0r.topviewplayer;
 
 import android.app.Application;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
-import android.database.MatrixCursor;
-import android.os.IBinder;
-import android.os.RemoteException;
-import android.text.style.TtsSpan.OrdinalBuilder;
 import android.util.Log;
-import android.widget.Toast;
-import com.n0texpecterr0r.topviewplayer.base.Song;
-import com.n0texpecterr0r.topviewplayer.player.PlayerService;
-import com.n0texpecterr0r.topviewplayer.util.SongListManager;
 import io.reactivex.functions.Consumer;
 import io.reactivex.plugins.RxJavaPlugins;
-import org.greenrobot.eventbus.EventBus;
 
 /**
  * @author Created by Nullptr

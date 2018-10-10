@@ -46,13 +46,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:orientation="vertical"
         android:layout_weight="1">
         <com.n0texpecterr0r.topviewplayer.widget.AlbumView
             android:id="@+id/detail_av_album"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="50dp"
-            android:src="@drawable/ic_empty"/>
+            android:src="@drawable/ic_empty"
+            android:visibility="gone"/>
+        <com.n0texpecterr0r.topviewplayer.widget.LyricsView
+            android:id="@+id/detail_lv_lrcview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            app:currentColor="@color/colorPrimary"
+            app:normalColor="#D7D7D7"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

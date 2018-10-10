@@ -1,12 +1,11 @@
 package com.n0texpecterr0r.topviewplayer.online.presenter;
 
 import com.n0texpecterr0r.topviewplayer.base.MvpBasePresenter;
-import com.n0texpecterr0r.topviewplayer.base.SongUrl;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract.OnlineModel;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract.OnlinePresenter;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract.OnlinePresenterCallback;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract.OnlineView;
-import com.n0texpecterr0r.topviewplayer.base.Song;
+import com.n0texpecterr0r.topviewplayer.bean.Song;
 import com.n0texpecterr0r.topviewplayer.online.model.OnlineModelImpl;
 import java.util.List;
 

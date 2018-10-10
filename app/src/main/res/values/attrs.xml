@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="BannerView">
-        <attr name="isAutoPlay" format="boolean"/>
+        <attr format="boolean" name="isAutoPlay"/>
+    </declare-styleable>
+    <declare-styleable name="LyricsView">
+        <attr format="color" name="currentColor"/>
+        <attr format="color" name="normalColor"/>
     </declare-styleable>
 </resources>

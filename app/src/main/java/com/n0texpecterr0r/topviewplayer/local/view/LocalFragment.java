@@ -23,7 +23,7 @@ import com.n0texpecterr0r.topviewplayer.base.MvpBaseFragment;
 import com.n0texpecterr0r.topviewplayer.local.LocalContract.LocalView;
 import com.n0texpecterr0r.topviewplayer.local.adapter.LocalSongAdapter;
 import com.n0texpecterr0r.topviewplayer.local.presenter.LocalPresenterImpl;
-import com.n0texpecterr0r.topviewplayer.base.Song;
+import com.n0texpecterr0r.topviewplayer.bean.Song;
 import com.n0texpecterr0r.topviewplayer.player.PlayerService;
 import com.n0texpecterr0r.topviewplayer.util.SongListManager;
 import com.n0texpecterr0r.topviewplayer.widget.SideBar.OnChooseLetterListener;

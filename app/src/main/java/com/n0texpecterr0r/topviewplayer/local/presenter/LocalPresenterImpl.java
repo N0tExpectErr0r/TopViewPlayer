@@ -7,7 +7,7 @@ import com.n0texpecterr0r.topviewplayer.local.LocalContract.LocalModel;
 import com.n0texpecterr0r.topviewplayer.local.LocalContract.LocalPresenterCallback;
 import com.n0texpecterr0r.topviewplayer.local.LocalContract.LocalView;
 import com.n0texpecterr0r.topviewplayer.local.model.LocalModelImpl;
-import com.n0texpecterr0r.topviewplayer.base.Song;
+import com.n0texpecterr0r.topviewplayer.bean.Song;
 import java.util.List;
 
 /**

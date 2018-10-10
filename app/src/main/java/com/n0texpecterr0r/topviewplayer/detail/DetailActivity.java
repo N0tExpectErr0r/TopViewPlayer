@@ -15,6 +15,7 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -22,23 +23,22 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import api.MusicApi;
-import api.MusicApi.Album;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.n0texpecterr0r.topviewplayer.IPlayerService;
 import com.n0texpecterr0r.topviewplayer.IPlayerService.Stub;
 import com.n0texpecterr0r.topviewplayer.R;
-import com.n0texpecterr0r.topviewplayer.base.Song;
-import com.n0texpecterr0r.topviewplayer.base.SongPicUrl;
-import com.n0texpecterr0r.topviewplayer.base.SongUrl;
-import com.n0texpecterr0r.topviewplayer.main.view.MainActivity;
+import com.n0texpecterr0r.topviewplayer.bean.Song;
+import com.n0texpecterr0r.topviewplayer.bean.SongPicUrl;
+import com.n0texpecterr0r.topviewplayer.bean.SongUrl;
 import com.n0texpecterr0r.topviewplayer.player.PlayerService;
 import com.n0texpecterr0r.topviewplayer.util.JsonUtil;
 import com.n0texpecterr0r.topviewplayer.util.ModeManager;
 import com.n0texpecterr0r.topviewplayer.util.SongListManager;
 import com.n0texpecterr0r.topviewplayer.util.TextUtil;
 import com.n0texpecterr0r.topviewplayer.widget.AlbumView;
+import com.n0texpecterr0r.topviewplayer.widget.LyricsView;
 import es.dmoral.toasty.Toasty;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -49,6 +49,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import java.util.List;
+import java.util.concurrent.RejectedExecutionHandler;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -70,6 +71,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
     private TextView mTvDuration;
     private SeekBar mSbTimebar;
     private AlbumView mAvAlbum;
+    private LyricsView mLvLrcView;
     private IPlayerService mPlayerService;
     private Disposable mRequest;
 
@@ -83,6 +85,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
         public void onServiceConnected(ComponentName name, IBinder service) {
             mPlayerService = Stub.asInterface(service);
 
+            mLvLrcView.bindPlayer(mPlayerService);
             // 初始化界面
             initView();
             // 开始定时更新UI
@@ -121,6 +124,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
         mSbTimebar.setProgress(current);
         mTvCurrent.setText(TextUtil.getTimeStr(current));
         mTvDuration.setText(TextUtil.getTimeStr(duration));
+        requestSongLrc(song.getLrcLink());
 
         ModeManager modeManager = ModeManager.getInstance();
         switch (modeManager.getCurrentMode()){
@@ -157,6 +161,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
         mTvDuration = findViewById(R.id.detail_tv_duration);
         mSbTimebar = findViewById(R.id.detail_sb_timebar);
         mAvAlbum = findViewById(R.id.detail_av_album);
+        mLvLrcView = findViewById(R.id.detail_lv_lrcview);
 
         // 注册EventBus
         EventBus.getDefault().register(this);
@@ -218,6 +223,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
         mSbTimebar.setMax(duration);
         mTvCurrent.setText("00:00");
         mTvDuration.setText(TextUtil.getTimeStr(duration));
+        requestSongLrc(song.getLrcLink());
         Glide.with(this)
                 .load(song.getImgUrl())
                 .into(mAvAlbum);
@@ -292,6 +298,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
                 mPlayerService.setSource(prevSong.getPath());
                 mPlayerService.start();
             }else{
+                mLvLrcView.setLyricsText(null);
                 requestOnlineSong(prevSong);
             }
         } catch (RemoteException e) {
@@ -315,6 +322,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
                 mPlayerService.start();
                 changeSong(nextSong);
             }else{
+                mLvLrcView.setLyricsText(null);
                 requestOnlineSong(nextSong);
             }
         } catch (RemoteException e) {
@@ -379,9 +387,9 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
                 .subscribe(new Consumer<Song>() {
                     @Override
                     public void accept(Song song) throws Exception {
-                        changeSong(song);
                         mPlayerService.setSource(song.getPath());
                         mPlayerService.start();
+                        changeSong(song);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -389,5 +397,36 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
                         Toasty.error(DetailActivity.this,"网络出现错误，请检查网络设置").show();
                     }
                 });
+    }
+
+    private void requestSongLrc(final String lrcLink) {
+        Observable.create(new ObservableOnSubscribe<Response>() {
+            @Override
+            public void subscribe(ObservableEmitter<Response> emitter) throws Exception {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url(lrcLink)
+                        .addHeader("User-Agent", USER_AGENT)
+                        .get()
+                        .build();
+                Call call = client.newCall(request);
+                Response response = call.execute();
+                emitter.onNext(response);
+            }
+        }).subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.newThread())
+                .subscribe(new Consumer<Response>() {
+                    @Override
+                    public void accept(Response response) throws Exception {
+                        String lrc = response.body().string();
+                        mLvLrcView.setLyricsText(lrc);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                    }
+                });
+
     }
 }

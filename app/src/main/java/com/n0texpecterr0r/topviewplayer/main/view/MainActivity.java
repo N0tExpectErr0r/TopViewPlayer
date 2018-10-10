@@ -17,7 +17,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import api.MusicApi;
@@ -25,9 +24,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.n0texpecterr0r.topviewplayer.IPlayerService;
 import com.n0texpecterr0r.topviewplayer.R;
-import com.n0texpecterr0r.topviewplayer.base.Song;
-import com.n0texpecterr0r.topviewplayer.base.SongPicUrl;
-import com.n0texpecterr0r.topviewplayer.base.SongUrl;
+import com.n0texpecterr0r.topviewplayer.bean.Song;
+import com.n0texpecterr0r.topviewplayer.bean.SongPicUrl;
+import com.n0texpecterr0r.topviewplayer.bean.SongUrl;
 import com.n0texpecterr0r.topviewplayer.local.view.LocalFragment;
 import com.n0texpecterr0r.topviewplayer.main.adapter.ViewPagerAdapter;
 import com.n0texpecterr0r.topviewplayer.player.PlayerService;
@@ -129,9 +128,9 @@ public class MainActivity extends AppCompatActivity {
             Song song = manager.getCurrentSong();
             try {
                 if (!song.isOnline()) {
-                    EventBus.getDefault().post(song);
                     mPlayerService.setSource(song.getPath());
                     mPlayerService.start();
+                    EventBus.getDefault().post(song);
                 }else{
                     requestOnlineSong(song);
                 }
@@ -172,9 +171,9 @@ public class MainActivity extends AppCompatActivity {
                 .subscribe(new Consumer<Song>() {
                     @Override
                     public void accept(Song song) throws Exception {
-                        EventBus.getDefault().post(song);
                         mPlayerService.setSource(song.getPath());
                         mPlayerService.start();
+                        EventBus.getDefault().post(song);
                     }
                 }, new Consumer<Throwable>() {
                     @Override

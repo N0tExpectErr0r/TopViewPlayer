@@ -1,10 +1,9 @@
 package com.n0texpecterr0r.topviewplayer.local.adapter;
 
-import android.util.Log;
 import com.n0texpecterr0r.topviewplayer.R;
 import com.n0texpecterr0r.topviewplayer.base.BaseAdapter;
 import com.n0texpecterr0r.topviewplayer.base.CommonViewHolder;
-import com.n0texpecterr0r.topviewplayer.base.Song;
+import com.n0texpecterr0r.topviewplayer.bean.Song;
 import com.n0texpecterr0r.topviewplayer.util.TextUtil;
 import java.util.Collections;
 import java.util.Comparator;
