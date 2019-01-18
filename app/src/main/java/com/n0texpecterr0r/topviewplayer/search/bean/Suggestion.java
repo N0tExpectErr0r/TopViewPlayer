@@ -1,7 +1,7 @@
 package com.n0texpecterr0r.topviewplayer.search.bean;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/9/6 21:17
  * @describe 搜索建议
  */

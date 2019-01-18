@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/9/3 18:13
  * @describe 歌词View，用于显示歌词
  */

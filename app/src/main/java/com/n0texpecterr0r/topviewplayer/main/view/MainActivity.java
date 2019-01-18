@@ -3,38 +3,35 @@ package com.n0texpecterr0r.topviewplayer.main.view;
 import static com.n0texpecterr0r.topviewplayer.ContextApplication.USER_AGENT;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.RemoteException;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TabLayout.TabLayoutOnPageChangeListener;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import api.MusicApi;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.n0texpecterr0r.topviewplayer.IPlayerService;
+import com.n0texpecterr0r.topviewplayer.PlayerCore;
 import com.n0texpecterr0r.topviewplayer.R;
 import com.n0texpecterr0r.topviewplayer.bean.Song;
 import com.n0texpecterr0r.topviewplayer.bean.SongPicUrl;
 import com.n0texpecterr0r.topviewplayer.bean.SongUrl;
 import com.n0texpecterr0r.topviewplayer.local.view.LocalFragment;
 import com.n0texpecterr0r.topviewplayer.main.adapter.ViewPagerAdapter;
-import com.n0texpecterr0r.topviewplayer.player.PlayerService;
 import com.n0texpecterr0r.topviewplayer.recommend.view.RecommendFragment;
 import com.n0texpecterr0r.topviewplayer.search.view.SearchActivity;
 import com.n0texpecterr0r.topviewplayer.util.JsonUtil;
-import com.n0texpecterr0r.topviewplayer.util.SongListManager;
+import com.n0texpecterr0r.topviewplayer.player.SongListManager;
+
 import es.dmoral.toasty.Toasty;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -43,32 +40,21 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
 import org.greenrobot.eventbus.EventBus;
 
 public class MainActivity extends AppCompatActivity {
 
     private TabLayout mTlTab;
     private ViewPager mVpPager;
-    private CompleteReceiver mReceiver;
-    private IPlayerService mPlayerService;
-
-    private ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mPlayerService = IPlayerService.Stub.asInterface(service);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mPlayerService = null;
-        }
-    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -90,14 +76,6 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // 注册广播
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("com.n0texpecterr0r.topviewplayer.complete");
-        mReceiver = new CompleteReceiver();
-        registerReceiver(mReceiver, intentFilter);
-        // 绑定服务
-        Intent intent = new Intent(this, PlayerService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         // 初始化控件
         Toolbar toolbar = findViewById(R.id.main_toolbar);
         mTlTab = findViewById(R.id.main_tb_tab);
@@ -117,73 +95,5 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mReceiver);
-    }
-
-    private class CompleteReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            SongListManager manager = SongListManager.getInstance();
-            manager.next();
-            Song song = manager.getCurrentSong();
-            try {
-                if (!song.isOnline()) {
-                    mPlayerService.setSource(song.getPath());
-                    mPlayerService.start();
-                    EventBus.getDefault().post(song);
-                }else{
-                    mPlayerService.seekTo(0);
-                    mPlayerService.pause();
-                    requestOnlineSong(song);
-                }
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void requestOnlineSong(final Song song) {
-        Observable.create(new ObservableOnSubscribe<Response>() {
-            @Override
-            public void subscribe(ObservableEmitter<Response> emitter) throws Exception {
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder()
-                        .url(MusicApi.Song.songInfo(song.getSongId()))
-                        .addHeader("User-Agent",USER_AGENT)
-                        .get()
-                        .build();
-                Call call = client.newCall(request);
-                Response response = call.execute();
-                emitter.onNext(response);
-            }
-        }).map(new Function<Response, Song>() {
-            @Override
-            public Song apply(Response response) throws Exception {
-                String json = response.body().string();
-                String urlJson = JsonUtil.getNodeString(json,"songurl.url");
-                List<SongUrl> songUrl = new Gson().fromJson(urlJson,new TypeToken<List<SongUrl>>(){}.getType());
-                String picJson = JsonUtil.getNodeString(json,"songinfo");
-                SongPicUrl picUrl = new Gson().fromJson(picJson,SongPicUrl.class);
-                song.setPath(songUrl.get(0).getPath());
-                song.setImgUrl(picUrl.getPicUrl());
-                return song;
-            }
-        }).subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Song>() {
-                    @Override
-                    public void accept(Song song) throws Exception {
-                        mPlayerService.setSource(song.getPath());
-                        mPlayerService.start();
-                        EventBus.getDefault().post(song);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        throwable.printStackTrace();
-                        Toasty.error(MainActivity.this,"网络出现错误，请检查网络设置").show();
-                    }
-                });
     }
 }

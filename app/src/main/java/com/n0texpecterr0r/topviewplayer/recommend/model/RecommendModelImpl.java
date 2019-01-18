@@ -32,7 +32,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/9/8 14:12
  * @describe 推荐Model
  */

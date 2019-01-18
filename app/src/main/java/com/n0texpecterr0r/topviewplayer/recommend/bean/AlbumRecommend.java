@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.security.spec.KeySpec;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/9/8 14:56
  * @describe TODO
  */

@@ -4,11 +4,11 @@ import android.os.Bundle;
 import java.lang.ref.WeakReference;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/9/6 18:25
  * @describe Mvp Presenter基类
  */
-public class MvpBasePresenter<T extends MvpBaseView> {
+public abstract class MvpBasePresenter<T extends MvpBaseView> {
 
     protected T mView;
 

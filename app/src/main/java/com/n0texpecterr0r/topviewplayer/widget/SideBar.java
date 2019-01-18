@@ -11,7 +11,7 @@ import android.view.View;
 import com.n0texpecterr0r.topviewplayer.ContextApplication;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/9/10 14:21
  * @describe TODO
  */

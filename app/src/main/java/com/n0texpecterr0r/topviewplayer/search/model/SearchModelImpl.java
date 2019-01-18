@@ -23,7 +23,7 @@ import okhttp3.Request.Builder;
 import okhttp3.Response;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/9/6 19:27
  * @describe 搜索Model
  */

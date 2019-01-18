@@ -11,7 +11,7 @@ import com.n0texpecterr0r.topviewplayer.recommend.model.RecommendModelImpl;
 import java.util.List;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/9/8 15:57
  * @describe TODO
  */

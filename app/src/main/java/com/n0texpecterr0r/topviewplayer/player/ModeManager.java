@@ -1,9 +1,7 @@
-package com.n0texpecterr0r.topviewplayer.util;
-
-import java.sql.NClob;
+package com.n0texpecterr0r.topviewplayer.player;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/9/19 15:31
  * @describe TODO
  */

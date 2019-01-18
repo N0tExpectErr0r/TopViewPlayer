@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 创建时间: 2018/9/6 18:57
  * @describe Mvp的基类Activity
  */

@@ -6,7 +6,7 @@ import com.n0texpecterr0r.topviewplayer.search.bean.Suggestion;
 import java.util.List;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/9/6 19:03
  * @describe Search模块的Contract类
  */

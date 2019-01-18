@@ -4,7 +4,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 /**
- * @AUTHOR nullptr
+ * @author N0tExpectErr0r
  * @DATE 创建时间: 2018/7/17
  * @DESCRIPTION 上拉加载更多Listener
  */

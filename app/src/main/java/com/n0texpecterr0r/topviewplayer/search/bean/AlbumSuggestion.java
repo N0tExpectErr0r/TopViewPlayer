@@ -3,7 +3,7 @@ package com.n0texpecterr0r.topviewplayer.search.bean;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/9/6 19:15
  * @describe 专辑搜索建议
  */

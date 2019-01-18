@@ -3,7 +3,7 @@ package com.n0texpecterr0r.topviewplayer.bean;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/10/9 21:08
  * @describe TODO
  */

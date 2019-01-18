@@ -1,13 +1,16 @@
 package com.n0texpecterr0r.topviewplayer.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/9/13 20:24
  * @describe TODO
  */
-public class Song {
+public class Song implements Parcelable {
     @SerializedName("album_title")
     private String album;
     @SerializedName("title")
@@ -21,7 +24,6 @@ public class Song {
     @SerializedName("lrclink")
     private String lrcLink;
     private transient String path;
-    private transient boolean isOnline;
 
     public String getPath() {
         return path;
@@ -29,14 +31,6 @@ public class Song {
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    public boolean isOnline() {
-        return isOnline;
-    }
-
-    public void setOnline(boolean online) {
-        isOnline = online;
     }
 
     public String getAlbum() {
@@ -86,4 +80,55 @@ public class Song {
     public void setLrcLink(String lrcLink) {
         this.lrcLink = lrcLink;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(album);
+        dest.writeString(name);
+        dest.writeString(artist);
+        dest.writeString(imgUrl);
+        dest.writeString(songId);
+        dest.writeString(lrcLink);
+        dest.writeString(path);
+    }
+
+    public void readFromParcel(Parcel reply) {
+        album = reply.readString();
+        name = reply.readString();
+        artist = reply.readString();
+        imgUrl = reply.readString();
+        songId = reply.readString();
+        lrcLink = reply.readString();
+        path = reply.readString();
+    }
+
+    public Song(){}
+
+    public Song(Parcel reply){
+        album = reply.readString();
+        name = reply.readString();
+        artist = reply.readString();
+        imgUrl = reply.readString();
+        songId = reply.readString();
+        lrcLink = reply.readString();
+        path = reply.readString();
+    }
+
+    public static final Creator<Song> CREATOR = new Creator<Song>() {
+        @Override
+        public Song createFromParcel(Parcel in) {
+            return new Song(in);
+        }
+
+        @Override
+        public Song[] newArray(int size) {
+            return new Song[size];
+        }
+    };
+
 }

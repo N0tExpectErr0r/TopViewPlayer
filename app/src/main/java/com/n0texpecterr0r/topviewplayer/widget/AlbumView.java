@@ -11,7 +11,7 @@ import android.util.Log;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/10/9 20:18
  * @describe TODO
  */

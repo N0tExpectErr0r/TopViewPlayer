@@ -1,5 +1,7 @@
 package com.n0texpecterr0r.topviewplayer.online.model;
 
+import android.annotation.SuppressLint;
+
 import static com.n0texpecterr0r.topviewplayer.ContextApplication.USER_AGENT;
 
 import api.MusicApi;
@@ -26,12 +28,13 @@ import okhttp3.Request.Builder;
 import okhttp3.Response;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/9/13 16:53
  * @describe TODO
  */
 public class OnlineModelImpl implements OnlineContract.OnlineModel {
 
+    @SuppressLint("CheckResult")
     @Override
     public void getOnlineSongs(final String query, final int pageNo, final OnlinePresenterCallback callback) {
         getObservable(query,pageNo).subscribeOn(Schedulers.newThread())
@@ -51,49 +54,6 @@ public class OnlineModelImpl implements OnlineContract.OnlineModel {
                         callback.error();
                     }
                 });
-    }
-
-    @Override
-    public void requestSongUrl(final Song song, final OnlinePresenterCallback callback) {
-        Observable.create(new ObservableOnSubscribe<Response>() {
-            @Override
-            public void subscribe(ObservableEmitter<Response> emitter) throws Exception {
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Builder()
-                        .url(MusicApi.Song.songInfo(song.getSongId()))
-                        .addHeader("User-Agent",USER_AGENT)
-                        .get()
-                        .build();
-                Call call = client.newCall(request);
-                Response response = call.execute();
-                emitter.onNext(response);
-            }
-        }).map(new Function<Response, Song>() {
-            @Override
-            public Song apply(Response response) throws Exception {
-                String json = response.body().string();
-                String urlJson = JsonUtil.getNodeString(json,"songurl.url");
-                List<SongUrl> songUrl = new Gson().fromJson(urlJson,new TypeToken<List<SongUrl>>(){}.getType());
-                String picJson = JsonUtil.getNodeString(json,"songinfo");
-                SongPicUrl picUrl = new Gson().fromJson(picJson,SongPicUrl.class);
-                song.setPath(songUrl.get(0).getPath());
-                song.setImgUrl(picUrl.getPicUrl());
-                return song;
-            }
-        }).subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Song>() {
-                    @Override
-                    public void accept(Song song) throws Exception {
-                        callback.solveSong(song);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        callback.error();
-                    }
-                });
-
     }
 
     private String getSearchUrl(String query, int pageNo, int pageSize, int type) {
@@ -124,9 +84,6 @@ public class OnlineModelImpl implements OnlineContract.OnlineModel {
             public List<Song> apply(Response response) throws Exception {
                 String json = JsonUtil.getNodeString(response.body().string(), "result.song_info.song_list");
                 List<Song> songList = new Gson().fromJson(json, new TypeToken<List<Song>>() {}.getType());
-                for (Song song : songList) {
-                    song.setOnline(true);
-                }
                 return songList;
             }
         });

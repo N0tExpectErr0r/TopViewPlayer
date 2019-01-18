@@ -10,7 +10,7 @@ import com.n0texpecterr0r.topviewplayer.R;
 import java.util.List;
 
 /**
- * @AUTHOR nullptr
+ * @author N0tExpectErr0r
  * @DATE 创建时间: 2018/7/17
  * @DESCRIPTION
  */

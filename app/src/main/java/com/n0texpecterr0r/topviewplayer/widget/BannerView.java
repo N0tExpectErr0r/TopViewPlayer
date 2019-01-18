@@ -24,7 +24,7 @@ import com.n0texpecterr0r.topviewplayer.recommend.bean.focus.Focus;
 import java.util.List;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/9/8 11:10
  * @describe 轮播控件
  */

@@ -1,11 +1,6 @@
 package com.n0texpecterr0r.topviewplayer.local.view;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,7 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.n0texpecterr0r.topviewplayer.IPlayerService;
+
+import com.n0texpecterr0r.topviewplayer.OnPreparedListener;
+import com.n0texpecterr0r.topviewplayer.PlayerCore;
 import com.n0texpecterr0r.topviewplayer.R;
 import com.n0texpecterr0r.topviewplayer.base.BaseAdapter.OnItemClickListener;
 import com.n0texpecterr0r.topviewplayer.base.MvpBaseFragment;
@@ -24,17 +21,16 @@ import com.n0texpecterr0r.topviewplayer.local.LocalContract.LocalView;
 import com.n0texpecterr0r.topviewplayer.local.adapter.LocalSongAdapter;
 import com.n0texpecterr0r.topviewplayer.local.presenter.LocalPresenterImpl;
 import com.n0texpecterr0r.topviewplayer.bean.Song;
-import com.n0texpecterr0r.topviewplayer.player.PlayerService;
-import com.n0texpecterr0r.topviewplayer.util.SongListManager;
 import com.n0texpecterr0r.topviewplayer.widget.SideBar.OnChooseLetterListener;
 import com.n0texpecterr0r.topviewplayer.widget.SideBarLayout;
+
 import es.dmoral.toasty.Toasty;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.greenrobot.eventbus.EventBus;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/9/9 14:14
  * @describe TODO
  */
@@ -42,7 +38,6 @@ public class LocalFragment extends MvpBaseFragment<LocalPresenterImpl> implement
 
     private SideBarLayout mSblSidebar;
     private SwipeRefreshLayout mSrlRefresh;
-    private IPlayerService mPlayerService;
     private RecyclerView mRcvList;
     private TextView mTvEmpty;
     private LocalSongAdapter mAdapter;
@@ -54,16 +49,12 @@ public class LocalFragment extends MvpBaseFragment<LocalPresenterImpl> implement
 
     @Override
     public View onCreateFragmentView(LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
+                                     @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_local, container, false);
         mSblSidebar = view.findViewById(R.id.local_sbl_sidebar);
         mRcvList = view.findViewById(R.id.local_rcv_list);
         mSrlRefresh = view.findViewById(R.id.local_srl_refresh);
         mTvEmpty = view.findViewById(R.id.local_tv_empty);
-
-        // 绑定服务
-        Intent intent = new Intent(getContext(), PlayerService.class);
-        getContext().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
         mSrlRefresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -72,7 +63,7 @@ public class LocalFragment extends MvpBaseFragment<LocalPresenterImpl> implement
             }
         });
 
-        mAdapter = new LocalSongAdapter(new ArrayList<Song>(), R.layout.item_song);
+        mAdapter = new LocalSongAdapter(new ArrayList<>(), R.layout.item_song);
         mRcvList.setLayoutManager(new LinearLayoutManager(getContext()));
         mRcvList.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
@@ -130,32 +121,17 @@ public class LocalFragment extends MvpBaseFragment<LocalPresenterImpl> implement
         Toasty.error(getContext(), "本地音乐扫描音乐失败").show();
     }
 
-    private ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mPlayerService = IPlayerService.Stub.asInterface(service);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mPlayerService = null;
-        }
-    };
-
     @Override
     public void onItemClick(View view, int position) {
         // 设置当前歌曲及歌曲列表
-        SongListManager manager = SongListManager.getInstance();
-        manager.setCurrentIndex(position);
-        manager.setSongList(mAdapter.getDatas());
-
-        Song song = manager.getCurrentSong();
-        EventBus.getDefault().post(song);
-        try {
-            mPlayerService.setSource(song.getPath());
-            mPlayerService.start();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        PlayerCore.get().setOnline(false);
+        PlayerCore.get().setSongList(mAdapter.getDatas());
+        PlayerCore.get().changeCurrent(position);
+        PlayerCore.get().addPrepareListener(new OnPreparedListener.Stub() {
+            @Override
+            public void onPrepared(Song curSong) throws RemoteException {
+                PlayerCore.get().play();
+            }
+        });
     }
 }

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/9/10 12:50
  * @describe 音乐扫描类
  */
@@ -39,7 +39,6 @@ public class SongUtil {
 
                     String albumId = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
                     song.setImgUrl(getAlbumPic(albumId,context));
-                    song.setOnline(false);
                     
                     list.add(song);
                 }

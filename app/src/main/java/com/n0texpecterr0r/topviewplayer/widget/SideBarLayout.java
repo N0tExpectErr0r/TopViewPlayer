@@ -13,7 +13,7 @@ import com.n0texpecterr0r.topviewplayer.ContextApplication;
 import com.n0texpecterr0r.topviewplayer.widget.SideBar.OnChooseLetterListener;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/9/10 15:34
  * @describe 带有中心提示的Sidebar
  */

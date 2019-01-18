@@ -6,7 +6,7 @@ import com.n0texpecterr0r.topviewplayer.bean.Song;
 import java.util.List;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/9/12 10:31
  * @describe TODO
  */

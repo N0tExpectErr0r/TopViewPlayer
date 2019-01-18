@@ -10,7 +10,7 @@ import com.n0texpecterr0r.topviewplayer.online.model.OnlineModelImpl;
 import java.util.List;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/9/13 19:23
  * @describe TODO
  */
@@ -40,18 +40,8 @@ public class OnlinePresenterImpl extends MvpBasePresenter<OnlineView>
     }
 
     @Override
-    public void solveSong(Song song) {
-        mView.playSong(song);
-    }
-
-    @Override
     public void getOnlineSongs(String query, int pageNo) {
         mView.showLoading();
         mModel.getOnlineSongs(query,pageNo,this);
-    }
-
-    @Override
-    public void requestSongUrl(Song song) {
-        mModel.requestSongUrl(song,this);
     }
 }

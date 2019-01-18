@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide;
 
 
 /**
- * @AUTHOR nullptr
+ * @author N0tExpectErr0r
  * @DATE 创建时间: 2018/7/18
  * @DESCRIPTION
  */

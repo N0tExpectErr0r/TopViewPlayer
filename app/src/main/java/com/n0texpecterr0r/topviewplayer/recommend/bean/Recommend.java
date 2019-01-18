@@ -1,7 +1,7 @@
 package com.n0texpecterr0r.topviewplayer.recommend.bean;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/9/8 12:35
  * @describe 推荐
  */

@@ -1,7 +1,7 @@
 package com.n0texpecterr0r.topviewplayer.base;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/9/6 18:26
  * @describe Mvp View基类
  */

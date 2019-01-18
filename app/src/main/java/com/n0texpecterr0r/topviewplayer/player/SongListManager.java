@@ -1,27 +1,26 @@
-package com.n0texpecterr0r.topviewplayer.util;
+package com.n0texpecterr0r.topviewplayer.player;
 
-import static com.n0texpecterr0r.topviewplayer.util.ModeManager.MODE_DEFAULT;
-import static com.n0texpecterr0r.topviewplayer.util.ModeManager.MODE_RANDOM;
-import static com.n0texpecterr0r.topviewplayer.util.ModeManager.MODE_SINGLE;
+import static com.n0texpecterr0r.topviewplayer.player.ModeManager.MODE_DEFAULT;
+import static com.n0texpecterr0r.topviewplayer.player.ModeManager.MODE_RANDOM;
+import static com.n0texpecterr0r.topviewplayer.player.ModeManager.MODE_SINGLE;
 
-import com.n0texpecterr0r.topviewplayer.base.AbstractListManager;
 import com.n0texpecterr0r.topviewplayer.bean.Song;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 /**
- * @author Created by Nullptr
+ * @author N0tExpectErr0r
  * @date 2018/9/19 16:02
  * @describe TODO
  */
-public class SongListManager extends AbstractListManager {
+public class SongListManager{
 
     private static SongListManager sInstance;
     private List<Song> mSongList;
     private int mCurrentIndex;
 
-    public SongListManager() {
+    private SongListManager() {
         mSongList = new ArrayList<>();
     }
 
@@ -44,7 +43,6 @@ public class SongListManager extends AbstractListManager {
         mCurrentIndex = currentIndex;
     }
 
-    @Override
     public void prev() {
         switch (ModeManager.getInstance().getCurrentMode()) {
             case MODE_DEFAULT:
@@ -60,7 +58,6 @@ public class SongListManager extends AbstractListManager {
         }
     }
 
-    @Override
     public void next() {
         switch (ModeManager.getInstance().getCurrentMode()) {
             case MODE_DEFAULT:
@@ -75,8 +72,7 @@ public class SongListManager extends AbstractListManager {
                 break;
         }
     }
-
-    @Override
+    
     public boolean isEmpty() {
         if (mSongList==null){
             return true;
