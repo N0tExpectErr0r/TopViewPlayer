@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.n0texpecterr0r.topviewplayer.OnPreparedListener;
-import com.n0texpecterr0r.topviewplayer.PlayerCore;
+import com.n0texpecterr0r.topviewplayer.SongPlayer;
 import com.n0texpecterr0r.topviewplayer.R;
 import com.n0texpecterr0r.topviewplayer.base.BaseAdapter.OnItemClickListener;
 import com.n0texpecterr0r.topviewplayer.base.MvpBaseFragment;
@@ -124,13 +124,13 @@ public class LocalFragment extends MvpBaseFragment<LocalPresenterImpl> implement
     @Override
     public void onItemClick(View view, int position) {
         // 设置当前歌曲及歌曲列表
-        PlayerCore.get().setOnline(false);
-        PlayerCore.get().setSongList(mAdapter.getDatas());
-        PlayerCore.get().changeCurrent(position);
-        PlayerCore.get().addPrepareListener(new OnPreparedListener.Stub() {
+        SongPlayer.get().setOnline(false);
+        SongPlayer.get().setSongList(mAdapter.getDatas());
+        SongPlayer.get().changeCurrent(position);
+        SongPlayer.get().addPrepareListener(new OnPreparedListener.Stub() {
             @Override
             public void onPrepared(Song curSong) throws RemoteException {
-                PlayerCore.get().play();
+                SongPlayer.get().play();
             }
         });
     }

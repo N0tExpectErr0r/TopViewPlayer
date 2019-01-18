@@ -1,11 +1,5 @@
 package com.n0texpecterr0r.topviewplayer.main.view;
 
-import static com.n0texpecterr0r.topviewplayer.ContextApplication.USER_AGENT;
-
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TabLayout.TabLayoutOnPageChangeListener;
@@ -16,40 +10,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import api.MusicApi;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.n0texpecterr0r.topviewplayer.PlayerCore;
 import com.n0texpecterr0r.topviewplayer.R;
-import com.n0texpecterr0r.topviewplayer.bean.Song;
-import com.n0texpecterr0r.topviewplayer.bean.SongPicUrl;
-import com.n0texpecterr0r.topviewplayer.bean.SongUrl;
 import com.n0texpecterr0r.topviewplayer.local.view.LocalFragment;
 import com.n0texpecterr0r.topviewplayer.main.adapter.ViewPagerAdapter;
 import com.n0texpecterr0r.topviewplayer.recommend.view.RecommendFragment;
 import com.n0texpecterr0r.topviewplayer.search.view.SearchActivity;
-import com.n0texpecterr0r.topviewplayer.util.JsonUtil;
-import com.n0texpecterr0r.topviewplayer.player.SongListManager;
-
-import es.dmoral.toasty.Toasty;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
-import org.greenrobot.eventbus.EventBus;
 
 public class MainActivity extends AppCompatActivity {
 

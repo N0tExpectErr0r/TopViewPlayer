@@ -1,6 +1,6 @@
 package com.n0texpecterr0r.topviewplayer.recommend.model;
 
-import static com.n0texpecterr0r.topviewplayer.ContextApplication.USER_AGENT;
+import static com.n0texpecterr0r.topviewplayer.AppApplication.USER_AGENT;
 
 import android.annotation.SuppressLint;
 import api.MusicApi;
@@ -14,7 +14,6 @@ import com.n0texpecterr0r.topviewplayer.recommend.bean.Recommend;
 import com.n0texpecterr0r.topviewplayer.recommend.bean.SongRecommend;
 import com.n0texpecterr0r.topviewplayer.recommend.bean.SongRecommendBean;
 import com.n0texpecterr0r.topviewplayer.recommend.bean.focus.Focus;
-import com.n0texpecterr0r.topviewplayer.recommend.bean.focus.FocusResponse;
 import com.n0texpecterr0r.topviewplayer.util.JsonUtil;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;

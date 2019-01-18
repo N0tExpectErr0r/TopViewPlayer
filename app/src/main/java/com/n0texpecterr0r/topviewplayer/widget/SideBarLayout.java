@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.n0texpecterr0r.topviewplayer.ContextApplication;
+import com.n0texpecterr0r.topviewplayer.AppApplication;
 import com.n0texpecterr0r.topviewplayer.widget.SideBar.OnChooseLetterListener;
 
 /**
@@ -87,7 +87,7 @@ public class SideBarLayout extends RelativeLayout implements OnChooseLetterListe
     }
 
     private int dpToPx(float dpValue) {
-        float scale = ContextApplication.getContext().getResources().getDisplayMetrics().density;
+        float scale = AppApplication.getContext().getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
 }

@@ -8,7 +8,6 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -35,7 +34,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static com.n0texpecterr0r.topviewplayer.ContextApplication.USER_AGENT;
+import static com.n0texpecterr0r.topviewplayer.AppApplication.USER_AGENT;
 
 /**
  * @author N0tExpectErr0r

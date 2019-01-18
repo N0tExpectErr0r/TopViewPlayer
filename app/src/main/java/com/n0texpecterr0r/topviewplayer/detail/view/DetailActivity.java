@@ -1,18 +1,14 @@
-package com.n0texpecterr0r.topviewplayer.detail;
+package com.n0texpecterr0r.topviewplayer.detail.view;
 
-import static com.n0texpecterr0r.topviewplayer.ContextApplication.USER_AGENT;
 import static com.n0texpecterr0r.topviewplayer.player.ModeManager.MODE_DEFAULT;
 import static com.n0texpecterr0r.topviewplayer.player.ModeManager.MODE_RANDOM;
 import static com.n0texpecterr0r.topviewplayer.player.ModeManager.MODE_SINGLE;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -20,48 +16,24 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-import api.MusicApi;
-
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.n0texpecterr0r.topviewplayer.PlayerCore;
+import com.n0texpecterr0r.topviewplayer.SongPlayer;
 import com.n0texpecterr0r.topviewplayer.R;
+import com.n0texpecterr0r.topviewplayer.base.MvpBaseActivity;
 import com.n0texpecterr0r.topviewplayer.bean.Song;
-import com.n0texpecterr0r.topviewplayer.bean.SongPicUrl;
-import com.n0texpecterr0r.topviewplayer.bean.SongUrl;
-import com.n0texpecterr0r.topviewplayer.util.JsonUtil;
-import com.n0texpecterr0r.topviewplayer.player.ModeManager;
-import com.n0texpecterr0r.topviewplayer.player.SongListManager;
+import com.n0texpecterr0r.topviewplayer.detail.DetailContract;
+import com.n0texpecterr0r.topviewplayer.detail.presenter.DetailPresenterImpl;
 import com.n0texpecterr0r.topviewplayer.util.TextUtil;
 import com.n0texpecterr0r.topviewplayer.widget.AlbumView;
 import com.n0texpecterr0r.topviewplayer.widget.LyricsView;
-import com.n0texpecterr0r.topviewplayer.widget.LyricsView.OnSeekListener;
 
 import es.dmoral.toasty.Toasty;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
-
-import java.sql.Time;
-import java.util.List;
-import java.util.Timer;
-
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class DetailActivity extends AppCompatActivity implements OnClickListener {
+public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> implements OnClickListener, DetailContract.DetailView {
 
     private ImageView mIvBack;
     private ImageView mIvMode;
@@ -82,52 +54,8 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
         context.startActivity(intent);
     }
 
-    private void initView() {
-        int duration = PlayerCore.get().getDuration();
-        int current = PlayerCore.get().getCurrentTime();
-        Song song = PlayerCore.get().getCurrentSong();
-
-        mTvName.setText(song.getName());
-        mTvArtist.setText(song.getArtist());
-        mSbTimebar.setMax(duration);
-        mSbTimebar.setProgress(current);
-        mTvCurrent.setText(TextUtil.getTimeStr(current));
-        mTvDuration.setText(TextUtil.getTimeStr(duration));
-        mLvLrcView.bindPlayer(PlayerCore.get().getPlayer());
-        requestSongLrc(song.getLrcLink());
-
-        Glide.with(this)
-                .load(song.getImgUrl())
-                .placeholder(R.drawable.ic_empty)
-                .error(R.drawable.ic_empty)
-                .dontAnimate()
-                .into(mAvAlbum);
-
-        if (PlayerCore.get().isPlaying()) {
-            mIvAction.setImageResource(R.drawable.ic_pause_white);
-            mAvAlbum.setPause(false);
-        } else {
-            mIvAction.setImageResource(R.drawable.ic_play_white);
-            mAvAlbum.setPause(true);
-        }
-
-        switch (PlayerCore.get().getCurrentMode()) {
-            case MODE_DEFAULT:
-                mIvMode.setImageResource(R.drawable.ic_default);
-                break;
-            case MODE_RANDOM:
-                mIvMode.setImageResource(R.drawable.ic_random);
-                break;
-            case MODE_SINGLE:
-                mIvMode.setImageResource(R.drawable.ic_single);
-                break;
-        }
-    }
-
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreateActivity(Bundle savedInstanceState) {
         setContentView(R.layout.activity_detail);
         // 初始化变量
         mIvAction = findViewById(R.id.detail_iv_action);
@@ -145,7 +73,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
         mLvLrcView = findViewById(R.id.detail_lv_lrcview);
 
         // 歌词View滑动监听
-        mLvLrcView.setOnSeekListener(startTime -> PlayerCore.get().seekTo((int) startTime));
+        mLvLrcView.setOnSeekListener(startTime -> SongPlayer.get().seekTo((int) startTime));
         // 播放暂停键监听
         mIvAction.setOnClickListener(this);
         // 下一首监听
@@ -171,8 +99,8 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
         mSbTimebar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser){
-                    PlayerCore.get().seekTo(progress);
+                if (fromUser) {
+                    SongPlayer.get().seekTo(progress);
                     mTvCurrent.setText(TextUtil.getTimeStr(progress));
                 }
             }
@@ -185,8 +113,50 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
-
     }
+
+    private void initView() {
+        int duration = SongPlayer.get().getDuration();
+        int current = SongPlayer.get().getCurrentTime();
+        Song song = SongPlayer.get().getCurrentSong();
+
+        mTvName.setText(song.getName());
+        mTvArtist.setText(song.getArtist());
+        mSbTimebar.setMax(duration);
+        mSbTimebar.setProgress(current);
+        mTvCurrent.setText(TextUtil.getTimeStr(current));
+        mTvDuration.setText(TextUtil.getTimeStr(duration));
+        mLvLrcView.bindPlayer(SongPlayer.get().getPlayer());
+        mPresenter.getLyrics(song.getLrcLink());
+
+        Glide.with(this)
+                .load(song.getImgUrl())
+                .placeholder(R.drawable.ic_empty)
+                .error(R.drawable.ic_empty)
+                .dontAnimate()
+                .into(mAvAlbum);
+
+        if (SongPlayer.get().isPlaying()) {
+            mIvAction.setImageResource(R.drawable.ic_pause_white);
+            mAvAlbum.setPause(false);
+        } else {
+            mIvAction.setImageResource(R.drawable.ic_play_white);
+            mAvAlbum.setPause(true);
+        }
+
+        switch (SongPlayer.get().getCurrentMode()) {
+            case MODE_DEFAULT:
+                mIvMode.setImageResource(R.drawable.ic_default);
+                break;
+            case MODE_RANDOM:
+                mIvMode.setImageResource(R.drawable.ic_random);
+                break;
+            case MODE_SINGLE:
+                mIvMode.setImageResource(R.drawable.ic_single);
+                break;
+        }
+    }
+
 
     @Override
     protected void onDestroy() {
@@ -194,10 +164,15 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    protected DetailPresenterImpl onCreatePresenter() {
+        return new DetailPresenterImpl();
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void changeSong(Song song) {
         int duration = 0;
-        duration = PlayerCore.get().getDuration();
+        duration = SongPlayer.get().getDuration();
         mTvName.setText(song.getName());
         mTvArtist.setText(song.getArtist());
         mIvAction.setImageResource(R.drawable.ic_pause_white);
@@ -206,7 +181,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
         mSbTimebar.setMax(duration);
         mTvCurrent.setText("00:00");
         mTvDuration.setText(TextUtil.getTimeStr(duration));
-        requestSongLrc(song.getLrcLink());
+        mPresenter.getLyrics(song.getLrcLink());
         Glide.with(this)
                 .load(song.getImgUrl())
                 .placeholder(R.drawable.ic_empty)
@@ -218,8 +193,8 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
     private Handler mUpdateTimeHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (PlayerCore.get().isPlaying()) {
-                int currentTime = PlayerCore.get().getCurrentTime();
+            if (SongPlayer.get().isPlaying()) {
+                int currentTime = SongPlayer.get().getCurrentTime();
                 mTvCurrent.setText(TextUtil.getTimeStr(currentTime));
                 mSbTimebar.setProgress(currentTime);
             }
@@ -260,12 +235,12 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
      * 播放/暂停
      */
     private void playAndPause() {
-        if (PlayerCore.get().isPlaying()) {
-            PlayerCore.get().pause();
+        if (SongPlayer.get().isPlaying()) {
+            SongPlayer.get().pause();
             mIvAction.setImageResource(R.drawable.ic_play_white);
             mAvAlbum.setPause(true);
         } else {
-            PlayerCore.get().resume();
+            SongPlayer.get().resume();
             mIvAction.setImageResource(R.drawable.ic_pause_white);
             mAvAlbum.setPause(false);
         }
@@ -275,7 +250,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
      * 上一首
      */
     private void prevSong() {
-        PlayerCore.get().prev();
+        SongPlayer.get().prev();
         mLvLrcView.setLyricsText(null);
     }
 
@@ -283,7 +258,7 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
      * 下一首
      */
     private void nextSong() {
-        PlayerCore.get().next();
+        SongPlayer.get().next();
         mLvLrcView.setLyricsText(null);
     }
 
@@ -291,8 +266,8 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
      * 切换播放模式
      */
     private void changeMode() {
-        PlayerCore.get().changeMode();
-        switch (PlayerCore.get().getCurrentMode()) {
+        SongPlayer.get().changeMode();
+        switch (SongPlayer.get().getCurrentMode()) {
             case MODE_DEFAULT:
                 Toasty.info(this, "顺序播放").show();
                 mIvMode.setImageResource(R.drawable.ic_default);
@@ -308,35 +283,26 @@ public class DetailActivity extends AppCompatActivity implements OnClickListener
         }
     }
 
-    @SuppressLint("CheckResult")
-    private void requestSongLrc(final String lrcLink) {
-        Observable.create(new ObservableOnSubscribe<Response>() {
-            @Override
-            public void subscribe(ObservableEmitter<Response> emitter) throws Exception {
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder()
-                        .url(lrcLink)
-                        .addHeader("User-Agent", USER_AGENT)
-                        .get()
-                        .build();
-                Call call = client.newCall(request);
-                Response response = call.execute();
-                emitter.onNext(response);
-            }
-        }).subscribeOn(Schedulers.newThread())
-                .observeOn(Schedulers.newThread())
-                .subscribe(new Consumer<Response>() {
-                    @Override
-                    public void accept(Response response) throws Exception {
-                        String lrc = response.body().string();
-                        mLvLrcView.setLyricsText(lrc);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        throwable.printStackTrace();
-                    }
-                });
+    @Override
+    public void showLyrics(String lrcText) {
+        mLvLrcView.setLyricsText(lrcText);
+    }
 
+    @Override
+    public void showLoading() {
+        mLvLrcView.setLyricsText("正在加载歌词");
+    }
+
+    @Override
+    public void hideLoading() {
+    }
+
+    @Override
+    public void showEmpty() {
+    }
+
+    @Override
+    public void showError() {
+        mLvLrcView.setLyricsText("歌词加载出错");
     }
 }

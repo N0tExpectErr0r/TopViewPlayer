@@ -11,19 +11,19 @@ import java.util.List;
 
 import static com.n0texpecterr0r.topviewplayer.player.ModeManager.MODE_DEFAULT;
 
-public class PlayerCore {
-    private static volatile PlayerCore singleton;
+public class SongPlayer {
+    private static volatile SongPlayer singleton;
     private IPlayerService mPlayerService;
     private boolean isInited = false;
 
-    private PlayerCore() {
+    private SongPlayer() {
     }
 
-    public static PlayerCore get() {
+    public static SongPlayer get() {
         if (singleton == null) {
-            synchronized (PlayerCore.class) {
+            synchronized (SongPlayer.class) {
                 if (singleton == null) {
-                    singleton = new PlayerCore();
+                    singleton = new SongPlayer();
                 }
             }
         }

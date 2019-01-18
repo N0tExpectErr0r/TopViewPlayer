@@ -9,12 +9,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.n0texpecterr0r.topviewplayer.OnPreparedListener;
-import com.n0texpecterr0r.topviewplayer.PlayerCore;
+import com.n0texpecterr0r.topviewplayer.SongPlayer;
 import com.n0texpecterr0r.topviewplayer.R;
 import com.n0texpecterr0r.topviewplayer.base.BaseMoreAdapter.OnItemClickListener;
 import com.n0texpecterr0r.topviewplayer.base.MvpBaseActivity;
@@ -23,8 +22,6 @@ import com.n0texpecterr0r.topviewplayer.bean.Song;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract.OnlineView;
 import com.n0texpecterr0r.topviewplayer.online.adapter.OnlineAdapter;
 import com.n0texpecterr0r.topviewplayer.online.presenter.OnlinePresenterImpl;
-
-import org.greenrobot.eventbus.EventBus;
 
 import es.dmoral.toasty.Toasty;
 
@@ -88,7 +85,7 @@ public class OnlineActivity extends MvpBaseActivity<OnlinePresenterImpl> impleme
     }
 
     @Override
-    protected OnlinePresenterImpl initPresenter() {
+    protected OnlinePresenterImpl onCreatePresenter() {
         return new OnlinePresenterImpl();
     }
 
@@ -132,13 +129,13 @@ public class OnlineActivity extends MvpBaseActivity<OnlinePresenterImpl> impleme
     @Override
     public void onItemClick(View view, int position) {
         // 设置当前歌曲及歌曲列表
-        PlayerCore.get().setOnline(true);
-        PlayerCore.get().setSongList(mAdapter.getDatas());
-        PlayerCore.get().changeCurrent(position);
-        PlayerCore.get().addPrepareListener(new OnPreparedListener.Stub() {
+        SongPlayer.get().setOnline(true);
+        SongPlayer.get().setSongList(mAdapter.getDatas());
+        SongPlayer.get().changeCurrent(position);
+        SongPlayer.get().addPrepareListener(new OnPreparedListener.Stub() {
             @Override
             public void onPrepared(Song curSong) throws RemoteException {
-                PlayerCore.get().play();
+                SongPlayer.get().play();
             }
         });
     }

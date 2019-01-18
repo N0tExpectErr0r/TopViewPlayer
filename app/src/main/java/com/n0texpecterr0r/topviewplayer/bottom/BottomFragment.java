@@ -13,11 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.n0texpecterr0r.topviewplayer.PlayerCore;
+import com.n0texpecterr0r.topviewplayer.SongPlayer;
 import com.n0texpecterr0r.topviewplayer.R;
 import com.n0texpecterr0r.topviewplayer.bean.Song;
-import com.n0texpecterr0r.topviewplayer.detail.DetailActivity;
-import com.n0texpecterr0r.topviewplayer.player.SongListManager;
+import com.n0texpecterr0r.topviewplayer.detail.view.DetailActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -56,7 +55,7 @@ public class BottomFragment extends Fragment implements OnClickListener {
         mLlBottomBar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!PlayerCore.get().isSongListEmpty()) {
+                if (!SongPlayer.get().isSongListEmpty()) {
                     DetailActivity.actionStart(getContext());
                 }
             }
@@ -71,9 +70,9 @@ public class BottomFragment extends Fragment implements OnClickListener {
     }
 
     private void initView() {
-        if (PlayerCore.get().isInited() && !PlayerCore.get().isSongListEmpty()) {
+        if (SongPlayer.get().isInited() && !SongPlayer.get().isSongListEmpty()) {
             // 恢复歌曲信息数据
-            Song song = PlayerCore.get().getCurrentSong();
+            Song song = SongPlayer.get().getCurrentSong();
             Glide.with(this)
                     .load(song.getImgUrl())
                     .placeholder(R.drawable.ic_empty)
@@ -81,7 +80,7 @@ public class BottomFragment extends Fragment implements OnClickListener {
                     .into(mIvCover);
             mTvName.setText(song.getName());
             mTvArtist.setText(song.getArtist());
-            mIvAction.setImageResource(PlayerCore.get().isPlaying()?
+            mIvAction.setImageResource(SongPlayer.get().isPlaying()?
                             R.drawable.ic_pause:R.drawable.ic_play);
         }
     }
@@ -107,12 +106,12 @@ public class BottomFragment extends Fragment implements OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (!PlayerCore.get().isSongListEmpty()) {
-            if (PlayerCore.get().isPlaying()) {
-                PlayerCore.get().pause();
+        if (!SongPlayer.get().isSongListEmpty()) {
+            if (SongPlayer.get().isPlaying()) {
+                SongPlayer.get().pause();
                 mIvAction.setImageResource(R.drawable.ic_play);
             } else {
-                PlayerCore.get().resume();
+                SongPlayer.get().resume();
                 mIvAction.setImageResource(R.drawable.ic_pause);
             }
         }

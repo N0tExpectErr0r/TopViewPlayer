@@ -10,7 +10,6 @@ import android.util.Log;
 
 import com.n0texpecterr0r.topviewplayer.player.PlayerService;
 
-import io.reactivex.functions.Consumer;
 import io.reactivex.plugins.RxJavaPlugins;
 
 /**
@@ -18,7 +17,7 @@ import io.reactivex.plugins.RxJavaPlugins;
  * @date 2018/9/9 10:42
  * @describe TODO
  */
-public class ContextApplication extends Application {
+public class AppApplication extends Application {
     private static Context sContext;
     public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36";
     private IPlayerService mPlayerService;
@@ -27,7 +26,7 @@ public class ContextApplication extends Application {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mPlayerService = IPlayerService.Stub.asInterface(service);
-            PlayerCore.get().init(mPlayerService);
+            SongPlayer.get().init(mPlayerService);
         }
 
         @Override
@@ -42,7 +41,7 @@ public class ContextApplication extends Application {
         sContext = getApplicationContext();
         // 处理下游无法被捕获的异常
         RxJavaPlugins.setErrorHandler(throwable ->
-                Log.d("ContextApplication", "Can't resolve Exception:"+throwable.getMessage()));
+                Log.d("AppApplication", "Can't resolve Exception:"+throwable.getMessage()));
         Intent serviceIntent = new Intent(this, PlayerService.class);
         bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
     }

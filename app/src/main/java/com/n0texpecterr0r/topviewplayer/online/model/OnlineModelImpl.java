@@ -2,13 +2,11 @@ package com.n0texpecterr0r.topviewplayer.online.model;
 
 import android.annotation.SuppressLint;
 
-import static com.n0texpecterr0r.topviewplayer.ContextApplication.USER_AGENT;
+import static com.n0texpecterr0r.topviewplayer.AppApplication.USER_AGENT;
 
 import api.MusicApi;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.n0texpecterr0r.topviewplayer.bean.SongPicUrl;
-import com.n0texpecterr0r.topviewplayer.bean.SongUrl;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract;
 import com.n0texpecterr0r.topviewplayer.online.OnlineContract.OnlinePresenterCallback;
 import com.n0texpecterr0r.topviewplayer.bean.Song;
@@ -24,7 +22,6 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Request.Builder;
 import okhttp3.Response;
 
 /**

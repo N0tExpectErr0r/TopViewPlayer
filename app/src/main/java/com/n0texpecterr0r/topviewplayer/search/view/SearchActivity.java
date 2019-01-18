@@ -86,7 +86,7 @@ public class SearchActivity extends MvpBaseActivity<SearchPresenterImpl> impleme
     }
 
     @Override
-    protected SearchPresenterImpl initPresenter() {
+    protected SearchPresenterImpl onCreatePresenter() {
         return new SearchPresenterImpl();
     }
 

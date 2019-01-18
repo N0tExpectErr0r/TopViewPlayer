@@ -1,9 +1,9 @@
 package com.n0texpecterr0r.topviewplayer.search.model;
 
-import static com.n0texpecterr0r.topviewplayer.ContextApplication.USER_AGENT;
+import static com.n0texpecterr0r.topviewplayer.AppApplication.USER_AGENT;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
+
 import api.MusicApi.Search;
 import com.google.gson.Gson;
 import com.n0texpecterr0r.topviewplayer.search.SearchContract.SearchModel;

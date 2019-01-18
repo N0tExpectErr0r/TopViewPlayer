@@ -16,7 +16,7 @@ public abstract class MvpBaseActivity<T extends MvpBasePresenter> extends AppCom
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter = initPresenter();
+        mPresenter = onCreatePresenter();
         if (mPresenter != null) {
             mPresenter.onAttach(this);
         }
@@ -51,7 +51,7 @@ public abstract class MvpBaseActivity<T extends MvpBasePresenter> extends AppCom
      *
      * @return 返回初始化后的Presenter
      */
-    protected abstract T initPresenter();
+    protected abstract T onCreatePresenter();
 
     @Override
     public void showLoading(){}

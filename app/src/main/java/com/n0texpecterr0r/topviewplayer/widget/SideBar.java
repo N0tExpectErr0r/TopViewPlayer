@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import com.n0texpecterr0r.topviewplayer.ContextApplication;
+import com.n0texpecterr0r.topviewplayer.AppApplication;
 
 /**
  * @author N0tExpectErr0r
@@ -126,7 +126,7 @@ public class SideBar extends View {
     }
 
     private int dpToPx(float dpValue) {
-        float scale = ContextApplication.getContext().getResources().getDisplayMetrics().density;
+        float scale = AppApplication.getContext().getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
 }
