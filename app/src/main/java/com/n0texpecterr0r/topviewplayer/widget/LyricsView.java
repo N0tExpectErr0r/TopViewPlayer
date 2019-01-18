@@ -74,12 +74,17 @@ public class LyricsView extends View {
         invalidate();
         mCurrentPaint = new Paint();
         mCurrentPaint.setColor(mCurrentColor);
-        mCurrentPaint.setTextSize(sp2px(getContext(), 18));
+        mCurrentPaint.setTextSize(sp2px(getContext(), 16));
         mCurrentPaint.setAntiAlias(true);
+        mCurrentPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
+
         mNormalPaint = new Paint();
         mNormalPaint.setColor(mNormalColor);
         mNormalPaint.setTextSize(sp2px(getContext(), 16));
-        mCurrentPaint.setAntiAlias(true);
+        mNormalPaint.setAntiAlias(true);
+        mNormalPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
+
+
     }
 
     /**
@@ -178,9 +183,9 @@ public class LyricsView extends View {
                 getCurrentPosition();
             }
             drawLyrics(canvas);
-            float offset = mCurrentPosition * 80;
+            float offset = mCurrentPosition * 100;
             setScrollY((int) offset);
-            if (getScrollY() == mCurrentPosition * 80 && !isMoving) {
+            if (getScrollY() == mCurrentPosition * 100 && !isMoving) {
                 mLastPosition = mCurrentPosition;
             }
             postInvalidateDelayed(100);
@@ -200,11 +205,11 @@ public class LyricsView extends View {
                 if (i == mCurrentPosition) {
                     mCurrentPaint.getTextBounds(text, 0, text.length(), bounds);
                     canvas.drawText(text, mWidth / 2 - bounds.width() / 2,
-                            mHeight / 2 - bounds.height() / 2 + 80 * i, mCurrentPaint);
+                            mHeight / 2 - bounds.height() / 2 + 100 * i, mCurrentPaint);
                 } else {
                     mNormalPaint.getTextBounds(text, 0, text.length(), bounds);
                     canvas.drawText(text, mWidth / 2 - bounds.width() / 2,
-                            mHeight / 2 - bounds.height() / 2 + 80 * i, mNormalPaint);
+                            mHeight / 2 - bounds.height() / 2 + 100 * i, mNormalPaint);
                 }
             }
         }
@@ -256,7 +261,7 @@ public class LyricsView extends View {
                 int offsetY = (int) (y - mLastY);
                 if (Math.abs(offsetY) > touchSlop) {
                     isMoving = true;
-                    int lineOffset = offsetY / 80;
+                    int lineOffset = offsetY / 100;
                     Log.d("onTouchEvent", lineOffset + "");
                     mCurrentPosition = mLastPosition - lineOffset;
                     if (mCurrentPosition > mLyricsList.size() - 1) {

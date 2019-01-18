@@ -4,28 +4,42 @@ import static com.n0texpecterr0r.topviewplayer.player.ModeManager.MODE_DEFAULT;
 import static com.n0texpecterr0r.topviewplayer.player.ModeManager.MODE_RANDOM;
 import static com.n0texpecterr0r.topviewplayer.player.ModeManager.MODE_SINGLE;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.n0texpecterr0r.topviewplayer.player.AudioPlayer;
 import com.n0texpecterr0r.topviewplayer.R;
 import com.n0texpecterr0r.topviewplayer.base.MvpBaseActivity;
 import com.n0texpecterr0r.topviewplayer.bean.Song;
 import com.n0texpecterr0r.topviewplayer.detail.DetailContract;
 import com.n0texpecterr0r.topviewplayer.detail.presenter.DetailPresenterImpl;
+import com.n0texpecterr0r.topviewplayer.util.BlurUtil;
 import com.n0texpecterr0r.topviewplayer.util.TextUtil;
 import com.n0texpecterr0r.topviewplayer.widget.AlbumView;
 import com.n0texpecterr0r.topviewplayer.widget.LyricsView;
+import com.zhouwei.blurlibrary.EasyBlur;
 
 import es.dmoral.toasty.Toasty;
 
@@ -48,6 +62,7 @@ public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> impleme
     private SeekBar mSbTimebar;
     private AlbumView mAvAlbum;
     private LyricsView mLvLrcView;
+    private ImageView mIvBackground;
 
     public static void actionStart(Context context) {
         Intent intent = new Intent(context, DetailActivity.class);
@@ -71,6 +86,7 @@ public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> impleme
         mSbTimebar = findViewById(R.id.detail_sb_timebar);
         mAvAlbum = findViewById(R.id.detail_av_album);
         mLvLrcView = findViewById(R.id.detail_lv_lrcview);
+        mIvBackground = findViewById(R.id.detail_iv_background);
 
         // 歌词View滑动监听
         mLvLrcView.setOnSeekListener(startTime -> AudioPlayer.get().seekTo((int) startTime));
@@ -128,13 +144,31 @@ public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> impleme
         mTvDuration.setText(TextUtil.getTimeStr(duration));
         mLvLrcView.bindPlayer(AudioPlayer.get().getPlayer());
         mPresenter.getLyrics(song.getLrcLink());
+        mIvBackground.setColorFilter(Color.parseColor("#88000000"));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);// 设置透明状态栏
+        }
 
         Glide.with(this)
                 .load(song.getImgUrl())
+                .asBitmap()
                 .placeholder(R.drawable.ic_empty)
                 .error(R.drawable.ic_empty)
                 .dontAnimate()
-                .into(mAvAlbum);
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        mAvAlbum.setImageBitmap(resource);
+                        mIvBackground.setImageBitmap(
+                            EasyBlur.with(DetailActivity.this)
+                                .bitmap(resource)
+                                .radius(25)
+                                .scale(4)
+                                .policy(EasyBlur.BlurPolicy.FAST_BLUR)
+                                .blur());
+                    }
+                });
 
         if (AudioPlayer.get().isPlaying()) {
             mIvAction.setImageResource(R.drawable.ic_pause_white);
@@ -170,7 +204,7 @@ public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> impleme
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void changeSong(Song song) {
+    public void onChangeSong(Song song) {
         int duration = 0;
         duration = AudioPlayer.get().getDuration();
         mTvName.setText(song.getName());
@@ -184,12 +218,26 @@ public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> impleme
         mPresenter.getLyrics(song.getLrcLink());
         Glide.with(this)
                 .load(song.getImgUrl())
+                .asBitmap()
                 .placeholder(R.drawable.ic_empty)
                 .error(R.drawable.ic_empty)
                 .dontAnimate()
-                .into(mAvAlbum);
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        mAvAlbum.setImageBitmap(resource);
+                        mIvBackground.setImageBitmap(
+                                EasyBlur.with(DetailActivity.this)
+                                        .bitmap(resource)
+                                        .radius(25)
+                                        .scale(4)
+                                        .policy(EasyBlur.BlurPolicy.FAST_BLUR)
+                                        .blur());
+                    }
+                });
     }
 
+    @SuppressLint("HandlerLeak")
     private Handler mUpdateTimeHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -221,11 +269,15 @@ public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> impleme
                 finish();
                 break;
             case R.id.detail_av_album:
+                mLvLrcView.startAnimation(getShowAnimate());
                 mLvLrcView.setVisibility(View.VISIBLE);
+                mAvAlbum.startAnimation(getHideAnimate());
                 mAvAlbum.setVisibility(View.GONE);
                 break;
             case R.id.detail_lv_lrcview:
+                mAvAlbum.startAnimation(getShowAnimate());
                 mAvAlbum.setVisibility(View.VISIBLE);
+                mLvLrcView.startAnimation(getHideAnimate());
                 mLvLrcView.setVisibility(View.GONE);
                 break;
         }
@@ -304,5 +356,17 @@ public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> impleme
     @Override
     public void showError() {
         mLvLrcView.setLyricsText("歌词加载出错");
+    }
+
+    private AlphaAnimation getShowAnimate() {
+        AlphaAnimation showAction = new AlphaAnimation(0.0f, 1.0f);
+        showAction.setDuration(200);
+        return showAction;
+    }
+
+    private AlphaAnimation getHideAnimate() {
+        AlphaAnimation hideAction = new AlphaAnimation(1.0f, 0.0f);
+        hideAction.setDuration(200);
+        return hideAction;
     }
 }

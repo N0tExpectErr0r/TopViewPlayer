@@ -36,7 +36,7 @@ public class AlbumView extends CircleImageView {
     }
 
     private void initView() {
-        setBorderColor(Color.parseColor("#212121"));
+        setBorderColor(Color.parseColor("#000000"));
         setBorderWidth(120);
         setScaleType(ScaleType.CENTER_CROP);
         mRotateAnimator = ObjectAnimator.ofFloat(this, "rotation", 0F, 360F)

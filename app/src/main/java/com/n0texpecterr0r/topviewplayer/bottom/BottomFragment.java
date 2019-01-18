@@ -86,7 +86,7 @@ public class BottomFragment extends Fragment implements OnClickListener {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void changeSong(Song song) {
+    public void onChangeSong(Song song) {
         mTvName.setText(song.getName());
         mTvArtist.setText(song.getArtist());
         mIvAction.setImageResource(R.drawable.ic_pause);
