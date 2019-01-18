@@ -13,7 +13,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.n0texpecterr0r.topviewplayer.IPlayerService;
 import com.n0texpecterr0r.topviewplayer.OnChangeSongListener;
-import com.n0texpecterr0r.topviewplayer.OnPreparedListener;
 import com.n0texpecterr0r.topviewplayer.bean.Song;
 import com.n0texpecterr0r.topviewplayer.bean.SongPicUrl;
 import com.n0texpecterr0r.topviewplayer.bean.SongUrl;
@@ -46,7 +45,6 @@ public class PlayerService extends Service {
     private ModeManager mModeManager;
     private MediaPlayer mPlayer = new MediaPlayer();
     private CopyOnWriteArrayList<OnChangeSongListener> mCompleteListeners = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<OnPreparedListener> mPrepareListeners = new CopyOnWriteArrayList<>();
     private Disposable mRequest;
     private boolean mIsOnline;
 
@@ -167,13 +165,6 @@ public class PlayerService extends Service {
         }
 
         @Override
-        public void addPrepareListener(OnPreparedListener listener) throws RemoteException {
-            if(!mPrepareListeners.contains(listener)){
-                mPrepareListeners.add(listener);
-            }
-        }
-
-        @Override
         public void addChangeListener(OnChangeSongListener listener) throws RemoteException {
             if (!mCompleteListeners.contains(listener)) {
                 mCompleteListeners.add(listener);
@@ -210,16 +201,6 @@ public class PlayerService extends Service {
         try {
             for (OnChangeSongListener listener : mCompleteListeners) {
                 listener.onChanged(song);
-            }
-        } catch (RemoteException e){
-            e.printStackTrace();
-        }
-    }
-
-    private void notifyPrepareListener(Song song){
-        try {
-            for (OnPreparedListener listener : mPrepareListeners) {
-                listener.onPrepared(song);
             }
         } catch (RemoteException e){
             e.printStackTrace();

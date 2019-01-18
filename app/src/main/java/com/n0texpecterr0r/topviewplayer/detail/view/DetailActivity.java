@@ -17,7 +17,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.n0texpecterr0r.topviewplayer.SongPlayer;
+import com.n0texpecterr0r.topviewplayer.player.AudioPlayer;
 import com.n0texpecterr0r.topviewplayer.R;
 import com.n0texpecterr0r.topviewplayer.base.MvpBaseActivity;
 import com.n0texpecterr0r.topviewplayer.bean.Song;
@@ -73,7 +73,7 @@ public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> impleme
         mLvLrcView = findViewById(R.id.detail_lv_lrcview);
 
         // 歌词View滑动监听
-        mLvLrcView.setOnSeekListener(startTime -> SongPlayer.get().seekTo((int) startTime));
+        mLvLrcView.setOnSeekListener(startTime -> AudioPlayer.get().seekTo((int) startTime));
         // 播放暂停键监听
         mIvAction.setOnClickListener(this);
         // 下一首监听
@@ -100,7 +100,7 @@ public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> impleme
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
-                    SongPlayer.get().seekTo(progress);
+                    AudioPlayer.get().seekTo(progress);
                     mTvCurrent.setText(TextUtil.getTimeStr(progress));
                 }
             }
@@ -116,9 +116,9 @@ public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> impleme
     }
 
     private void initView() {
-        int duration = SongPlayer.get().getDuration();
-        int current = SongPlayer.get().getCurrentTime();
-        Song song = SongPlayer.get().getCurrentSong();
+        int duration = AudioPlayer.get().getDuration();
+        int current = AudioPlayer.get().getCurrentTime();
+        Song song = AudioPlayer.get().getCurrentSong();
 
         mTvName.setText(song.getName());
         mTvArtist.setText(song.getArtist());
@@ -126,7 +126,7 @@ public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> impleme
         mSbTimebar.setProgress(current);
         mTvCurrent.setText(TextUtil.getTimeStr(current));
         mTvDuration.setText(TextUtil.getTimeStr(duration));
-        mLvLrcView.bindPlayer(SongPlayer.get().getPlayer());
+        mLvLrcView.bindPlayer(AudioPlayer.get().getPlayer());
         mPresenter.getLyrics(song.getLrcLink());
 
         Glide.with(this)
@@ -136,7 +136,7 @@ public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> impleme
                 .dontAnimate()
                 .into(mAvAlbum);
 
-        if (SongPlayer.get().isPlaying()) {
+        if (AudioPlayer.get().isPlaying()) {
             mIvAction.setImageResource(R.drawable.ic_pause_white);
             mAvAlbum.setPause(false);
         } else {
@@ -144,7 +144,7 @@ public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> impleme
             mAvAlbum.setPause(true);
         }
 
-        switch (SongPlayer.get().getCurrentMode()) {
+        switch (AudioPlayer.get().getCurrentMode()) {
             case MODE_DEFAULT:
                 mIvMode.setImageResource(R.drawable.ic_default);
                 break;
@@ -172,7 +172,7 @@ public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> impleme
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void changeSong(Song song) {
         int duration = 0;
-        duration = SongPlayer.get().getDuration();
+        duration = AudioPlayer.get().getDuration();
         mTvName.setText(song.getName());
         mTvArtist.setText(song.getArtist());
         mIvAction.setImageResource(R.drawable.ic_pause_white);
@@ -193,8 +193,8 @@ public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> impleme
     private Handler mUpdateTimeHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (SongPlayer.get().isPlaying()) {
-                int currentTime = SongPlayer.get().getCurrentTime();
+            if (AudioPlayer.get().isPlaying()) {
+                int currentTime = AudioPlayer.get().getCurrentTime();
                 mTvCurrent.setText(TextUtil.getTimeStr(currentTime));
                 mSbTimebar.setProgress(currentTime);
             }
@@ -235,12 +235,12 @@ public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> impleme
      * 播放/暂停
      */
     private void playAndPause() {
-        if (SongPlayer.get().isPlaying()) {
-            SongPlayer.get().pause();
+        if (AudioPlayer.get().isPlaying()) {
+            AudioPlayer.get().pause();
             mIvAction.setImageResource(R.drawable.ic_play_white);
             mAvAlbum.setPause(true);
         } else {
-            SongPlayer.get().resume();
+            AudioPlayer.get().resume();
             mIvAction.setImageResource(R.drawable.ic_pause_white);
             mAvAlbum.setPause(false);
         }
@@ -250,7 +250,7 @@ public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> impleme
      * 上一首
      */
     private void prevSong() {
-        SongPlayer.get().prev();
+        AudioPlayer.get().prev();
         mLvLrcView.setLyricsText(null);
     }
 
@@ -258,7 +258,7 @@ public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> impleme
      * 下一首
      */
     private void nextSong() {
-        SongPlayer.get().next();
+        AudioPlayer.get().next();
         mLvLrcView.setLyricsText(null);
     }
 
@@ -266,8 +266,8 @@ public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> impleme
      * 切换播放模式
      */
     private void changeMode() {
-        SongPlayer.get().changeMode();
-        switch (SongPlayer.get().getCurrentMode()) {
+        AudioPlayer.get().changeMode();
+        switch (AudioPlayer.get().getCurrentMode()) {
             case MODE_DEFAULT:
                 Toasty.info(this, "顺序播放").show();
                 mIvMode.setImageResource(R.drawable.ic_default);

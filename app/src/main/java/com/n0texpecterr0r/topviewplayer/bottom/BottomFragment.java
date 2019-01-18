@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.n0texpecterr0r.topviewplayer.SongPlayer;
+import com.n0texpecterr0r.topviewplayer.player.AudioPlayer;
 import com.n0texpecterr0r.topviewplayer.R;
 import com.n0texpecterr0r.topviewplayer.bean.Song;
 import com.n0texpecterr0r.topviewplayer.detail.view.DetailActivity;
@@ -55,7 +55,7 @@ public class BottomFragment extends Fragment implements OnClickListener {
         mLlBottomBar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!SongPlayer.get().isSongListEmpty()) {
+                if (!AudioPlayer.get().isSongListEmpty()) {
                     DetailActivity.actionStart(getContext());
                 }
             }
@@ -70,9 +70,9 @@ public class BottomFragment extends Fragment implements OnClickListener {
     }
 
     private void initView() {
-        if (SongPlayer.get().isInited() && !SongPlayer.get().isSongListEmpty()) {
+        if (AudioPlayer.get().isInited() && !AudioPlayer.get().isSongListEmpty()) {
             // 恢复歌曲信息数据
-            Song song = SongPlayer.get().getCurrentSong();
+            Song song = AudioPlayer.get().getCurrentSong();
             Glide.with(this)
                     .load(song.getImgUrl())
                     .placeholder(R.drawable.ic_empty)
@@ -80,7 +80,7 @@ public class BottomFragment extends Fragment implements OnClickListener {
                     .into(mIvCover);
             mTvName.setText(song.getName());
             mTvArtist.setText(song.getArtist());
-            mIvAction.setImageResource(SongPlayer.get().isPlaying()?
+            mIvAction.setImageResource(AudioPlayer.get().isPlaying()?
                             R.drawable.ic_pause:R.drawable.ic_play);
         }
     }
@@ -106,12 +106,12 @@ public class BottomFragment extends Fragment implements OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (!SongPlayer.get().isSongListEmpty()) {
-            if (SongPlayer.get().isPlaying()) {
-                SongPlayer.get().pause();
+        if (!AudioPlayer.get().isSongListEmpty()) {
+            if (AudioPlayer.get().isPlaying()) {
+                AudioPlayer.get().pause();
                 mIvAction.setImageResource(R.drawable.ic_play);
             } else {
-                SongPlayer.get().resume();
+                AudioPlayer.get().resume();
                 mIvAction.setImageResource(R.drawable.ic_pause);
             }
         }

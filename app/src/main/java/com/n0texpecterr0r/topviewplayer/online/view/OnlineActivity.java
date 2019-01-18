@@ -12,8 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.n0texpecterr0r.topviewplayer.OnPreparedListener;
-import com.n0texpecterr0r.topviewplayer.SongPlayer;
+import com.n0texpecterr0r.topviewplayer.player.AudioPlayer;
 import com.n0texpecterr0r.topviewplayer.R;
 import com.n0texpecterr0r.topviewplayer.base.BaseMoreAdapter.OnItemClickListener;
 import com.n0texpecterr0r.topviewplayer.base.MvpBaseActivity;
@@ -129,14 +128,8 @@ public class OnlineActivity extends MvpBaseActivity<OnlinePresenterImpl> impleme
     @Override
     public void onItemClick(View view, int position) {
         // 设置当前歌曲及歌曲列表
-        SongPlayer.get().setOnline(true);
-        SongPlayer.get().setSongList(mAdapter.getDatas());
-        SongPlayer.get().changeCurrent(position);
-        SongPlayer.get().addPrepareListener(new OnPreparedListener.Stub() {
-            @Override
-            public void onPrepared(Song curSong) throws RemoteException {
-                SongPlayer.get().play();
-            }
-        });
+        AudioPlayer.get().setOnline(true);
+        AudioPlayer.get().setSongList(mAdapter.getDatas());
+        AudioPlayer.get().changeCurrent(position);
     }
 }

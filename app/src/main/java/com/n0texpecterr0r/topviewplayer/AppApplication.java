@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.n0texpecterr0r.topviewplayer.player.PlayerService;
+import com.n0texpecterr0r.topviewplayer.player.AudioPlayer;
 
 import io.reactivex.plugins.RxJavaPlugins;
 
@@ -26,7 +27,7 @@ public class AppApplication extends Application {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mPlayerService = IPlayerService.Stub.asInterface(service);
-            SongPlayer.get().init(mPlayerService);
+            AudioPlayer.get().init(mPlayerService);
         }
 
         @Override

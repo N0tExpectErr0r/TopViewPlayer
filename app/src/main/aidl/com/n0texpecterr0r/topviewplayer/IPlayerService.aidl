@@ -4,7 +4,6 @@ package com.n0texpecterr0r.topviewplayer;
 // Declare any non-default types here with import statements
 import com.n0texpecterr0r.topviewplayer.bean.Song;
 import com.n0texpecterr0r.topviewplayer.OnChangeSongListener;
-import com.n0texpecterr0r.topviewplayer.OnPreparedListener;
 
 interface IPlayerService {
       // SongListManager
@@ -28,5 +27,4 @@ interface IPlayerService {
       void setOnline(boolean isOnline);
       // Listener
       void addChangeListener(OnChangeSongListener listener);
-      void addPrepareListener(OnPreparedListener listener);
 }

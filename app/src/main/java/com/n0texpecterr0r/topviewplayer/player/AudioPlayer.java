@@ -1,8 +1,10 @@
-package com.n0texpecterr0r.topviewplayer;
+package com.n0texpecterr0r.topviewplayer.player;
 
 import android.os.RemoteException;
 import android.util.Log;
 
+import com.n0texpecterr0r.topviewplayer.IPlayerService;
+import com.n0texpecterr0r.topviewplayer.OnChangeSongListener;
 import com.n0texpecterr0r.topviewplayer.bean.Song;
 
 import org.greenrobot.eventbus.EventBus;
@@ -11,19 +13,23 @@ import java.util.List;
 
 import static com.n0texpecterr0r.topviewplayer.player.ModeManager.MODE_DEFAULT;
 
-public class SongPlayer {
-    private static volatile SongPlayer singleton;
+
+/**
+ * 采用单例模式的音乐管理类
+ */
+public class AudioPlayer {
+    private static volatile AudioPlayer singleton;
     private IPlayerService mPlayerService;
     private boolean isInited = false;
 
-    private SongPlayer() {
+    private AudioPlayer() {
     }
 
-    public static SongPlayer get() {
+    public static AudioPlayer get() {
         if (singleton == null) {
-            synchronized (SongPlayer.class) {
+            synchronized (AudioPlayer.class) {
                 if (singleton == null) {
-                    singleton = new SongPlayer();
+                    singleton = new AudioPlayer();
                 }
             }
         }
@@ -34,7 +40,7 @@ public class SongPlayer {
         mPlayerService = playerService;
 
         try {
-            // 注册播放完成Listener
+            // 注册歌曲改变Listener
             mPlayerService.addChangeListener(mChangeListener);
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -196,16 +202,7 @@ public class SongPlayer {
 
     public void setOnline(boolean isOnline) {
         try {
-            Log.d("PlayerService", "setOnline: ");
             mPlayerService.setOnline(isOnline);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void addPrepareListener(OnPreparedListener listener) {
-        try {
-            mPlayerService.addPrepareListener(listener);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
