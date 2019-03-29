@@ -83,8 +83,6 @@ public class LyricsView extends View {
         mNormalPaint.setTextSize(sp2px(getContext(), 16));
         mNormalPaint.setAntiAlias(true);
         mNormalPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
-
-
     }
 
     /**
@@ -98,6 +96,8 @@ public class LyricsView extends View {
             invalidate();
         } catch (IOException e) {
             e.printStackTrace();
+            mLyricsList = null;
+            invalidate();
         }
     }
 
@@ -173,7 +173,7 @@ public class LyricsView extends View {
             mWidth = getMeasuredWidth();
             mHeight = getMeasuredHeight();
         }
-        if (mLyricsList == null || mLyricsList.size() == 0) {
+        if (mLyricsList == null || mLyricsList.size() <= 1) {
             Rect bounds = new Rect();
             String text = "暂无歌词";
             mCurrentPaint.getTextBounds(text, 0, text.length(), bounds);

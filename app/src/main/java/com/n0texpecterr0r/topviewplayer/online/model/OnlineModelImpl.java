@@ -29,7 +29,7 @@ import okhttp3.Response;
  * @date 2018/9/13 16:53
  * @describe TODO
  */
-public class OnlineModelImpl implements OnlineContract.OnlineModel {
+public class OnlineModelImpl implements OnlineContract.OnlineModel{
 
     @SuppressLint("CheckResult")
     @Override

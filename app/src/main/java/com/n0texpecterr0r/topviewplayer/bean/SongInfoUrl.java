@@ -7,9 +7,10 @@ import com.google.gson.annotations.SerializedName;
  * @date 2018/10/9 21:08
  * @describe TODO
  */
-public class SongPicUrl {
+public class SongInfoUrl {
     @SerializedName("pic_premium")
     private String picUrl;
+    private String lrclink;
 
     public String getPicUrl() {
         return picUrl;
@@ -17,5 +18,13 @@ public class SongPicUrl {
 
     public void setPicUrl(String picUrl) {
         this.picUrl = picUrl;
+    }
+
+    public String getLrclink() {
+        return lrclink;
+    }
+
+    public void setLrclink(String lrclink) {
+        this.lrclink = lrclink;
     }
 }

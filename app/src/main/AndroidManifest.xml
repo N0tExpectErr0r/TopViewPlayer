@@ -25,7 +25,8 @@
         </activity>
         <activity android:name=".online.view.OnlineActivity">
         </activity>
-
+        <activity android:name=".gedan.view.GedanActivity">
+        </activity>
         <service
             android:name=".player.PlayerService"
             android:process=":remote">

@@ -6,11 +6,13 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.n0texpecterr0r.topviewplayer.R;
 import com.n0texpecterr0r.topviewplayer.base.MvpBaseFragment;
+import com.n0texpecterr0r.topviewplayer.gedan.view.GedanActivity;
 import com.n0texpecterr0r.topviewplayer.recommend.RecommendContract.RecommendView;
 import com.n0texpecterr0r.topviewplayer.recommend.adapter.RecommendAdapter;
 import com.n0texpecterr0r.topviewplayer.recommend.adapter.RecommendAdapter.OnItemClickListener;
@@ -22,6 +24,8 @@ import com.n0texpecterr0r.topviewplayer.widget.BannerView.OnBannerItemClick;
 import es.dmoral.toasty.Toasty;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.n0texpecterr0r.topviewplayer.recommend.bean.Recommend.TYPE_GEDAN;
 
 /**
  * @author N0tExpectErr0r
@@ -112,6 +116,14 @@ public class RecommendFragment extends MvpBaseFragment<RecommendPresenterImpl> i
 
     @Override
     public void onItemClick(Recommend recommend) {
-        Toasty.success(getContext(),recommend.getTitle()).show();
+        switch (recommend.getType()){
+            case TYPE_GEDAN:
+                Log.d("RecommendFragment", "Gedan Id:"+recommend.getId());
+                GedanActivity.actionStart(getContext(), recommend.getId());
+                break;
+            default:
+                Toasty.success(getContext(),recommend.getTitle()).show();
+                break;
+        }
     }
 }

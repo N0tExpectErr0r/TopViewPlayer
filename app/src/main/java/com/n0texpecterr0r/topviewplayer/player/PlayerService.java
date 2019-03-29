@@ -14,7 +14,7 @@ import com.google.gson.reflect.TypeToken;
 import com.n0texpecterr0r.topviewplayer.IPlayerService;
 import com.n0texpecterr0r.topviewplayer.OnChangeSongListener;
 import com.n0texpecterr0r.topviewplayer.bean.Song;
-import com.n0texpecterr0r.topviewplayer.bean.SongPicUrl;
+import com.n0texpecterr0r.topviewplayer.bean.SongInfoUrl;
 import com.n0texpecterr0r.topviewplayer.bean.SongUrl;
 import com.n0texpecterr0r.topviewplayer.util.JsonUtil;
 
@@ -246,10 +246,13 @@ public class PlayerService extends Service {
             }.getType());
 
             String picJson = JsonUtil.getNodeString(json, "songinfo");
-            SongPicUrl picUrl = new Gson().fromJson(picJson, SongPicUrl.class);
+            SongInfoUrl infoUrl = new Gson().fromJson(picJson, SongInfoUrl.class);
 
             song.setPath(songUrl.get(0).getPath());
-            song.setImgUrl(picUrl.getPicUrl());
+            song.setImgUrl(infoUrl.getPicUrl());
+            if (song.getLrcLink() == null){
+                song.setLrcLink(infoUrl.getLrclink());
+            }
             return song;
         }).subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())

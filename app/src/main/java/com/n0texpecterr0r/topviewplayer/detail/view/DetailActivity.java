@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -337,6 +338,7 @@ public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> impleme
 
     @Override
     public void showLyrics(String lrcText) {
+        Log.d("DetailActivity", lrcText);
         mLvLrcView.setLyricsText(lrcText);
     }
 
@@ -355,7 +357,7 @@ public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> impleme
 
     @Override
     public void showError() {
-        mLvLrcView.setLyricsText("歌词加载出错");
+        mLvLrcView.setLyricsText("暂无歌词");
     }
 
     private AlphaAnimation getShowAnimate() {

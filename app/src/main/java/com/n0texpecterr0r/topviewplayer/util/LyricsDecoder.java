@@ -34,6 +34,7 @@ public class LyricsDecoder {
 
     private void decodeLine(String str) {
         Lyrics lyrics = new Lyrics();
+
         if (str.startsWith("[ti:")) {
             lyrics.setText(str.substring(4, str.lastIndexOf("]")));
             lyrics.setStart(time++);
@@ -50,6 +51,9 @@ public class LyricsDecoder {
             lyrics.setText(str.substring(4, str.lastIndexOf("]")));
             lyrics.setStart(time++);
         } else if (str.startsWith("[key:")) {
+            lyrics.setText(str.substring(4, str.lastIndexOf("]")));
+            lyrics.setStart(time++);
+        } else if (str.startsWith("[ver:")) {
             lyrics.setText(str.substring(4, str.lastIndexOf("]")));
             lyrics.setStart(time++);
         } else {

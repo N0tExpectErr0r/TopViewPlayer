@@ -1,6 +1,7 @@
 package com.n0texpecterr0r.topviewplayer.detail.model;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 import com.n0texpecterr0r.topviewplayer.detail.DetailContract.*;
 
@@ -29,6 +30,7 @@ public class DetailModelImpl implements DetailModel {
         Observable.create(new ObservableOnSubscribe<Response>() {
             @Override
             public void subscribe(ObservableEmitter<Response> emitter) throws Exception {
+                Log.d("DetailModel", "lrclink:"+lrcLink);
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
                         .url(lrcLink)
