@@ -41,7 +41,7 @@ public class SearchActivity extends MvpBaseActivity<SearchPresenterImpl> impleme
         MenuItem searchItem = menu.findItem(R.id.menu_search_search);
         // 获取SearchView
         mSvSearch = (android.support.v7.widget.SearchView) MenuItemCompat.getActionView(searchItem);
-        mSvSearch.setQueryHint("搜索网络歌曲");
+        mSvSearch.setQueryHint("搜索网络音乐");
         mSvSearch.setIconifiedByDefault(false);
         mSvSearch.setSubmitButtonEnabled(true);
         mSvSearch.setMaxWidth(5000);
@@ -49,11 +49,11 @@ public class SearchActivity extends MvpBaseActivity<SearchPresenterImpl> impleme
         mSvSearch.setOnQueryTextListener(new OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (!mSvSearch.getQuery().equals("")){
+                if (!mSvSearch.getQuery().equals(""))
                     OnlineActivity.actionStart(SearchActivity.this,query);
-                }else{
+                else
                     Toasty.warning(SearchActivity.this,"未填写搜索信息").show();
-                }
+
                 finish();
                 return false;
             }
