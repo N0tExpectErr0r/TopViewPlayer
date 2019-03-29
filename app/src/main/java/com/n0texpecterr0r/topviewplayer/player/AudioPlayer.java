@@ -58,6 +58,11 @@ public class AudioPlayer {
         public void onChanged(Song song) {
             EventBus.getDefault().post(song);
         }
+
+        @Override
+        public void onAction(boolean isPlaying) {
+            EventBus.getDefault().post(isPlaying);
+        }
     };
 
     public void setSongList(List<Song> songList) {

@@ -200,6 +200,17 @@ public class DetailActivity extends MvpBaseActivity<DetailPresenterImpl> impleme
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAction(Boolean isPlaying) {
+        if (isPlaying) {
+            mIvAction.setImageResource(R.drawable.ic_pause_white);
+            mAvAlbum.setPause(false);
+        } else {
+            mIvAction.setImageResource(R.drawable.ic_play_white);
+            mAvAlbum.setPause(true);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onChangeSong(Song song) {
         int duration = 0;
         duration = AudioPlayer.get().getDuration();

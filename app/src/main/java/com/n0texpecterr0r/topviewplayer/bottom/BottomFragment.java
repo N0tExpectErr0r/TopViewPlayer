@@ -97,6 +97,14 @@ public class BottomFragment extends Fragment implements OnClickListener {
                 .into(mIvCover);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAction(Boolean isPlaying) {
+        if (isPlaying) {
+            mIvAction.setImageResource(R.drawable.ic_pause);
+        } else {
+            mIvAction.setImageResource(R.drawable.ic_play);
+        }
+    }
 
     @Override
     public void onDestroy() {
