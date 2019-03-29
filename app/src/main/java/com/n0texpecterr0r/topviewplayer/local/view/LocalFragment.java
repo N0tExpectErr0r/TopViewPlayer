@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -117,7 +118,7 @@ public class LocalFragment extends MvpBaseFragment<LocalPresenterImpl> implement
 
     @Override
     public void showError() {
-        Toasty.error(getContext(), "本地音乐扫描音乐失败").show();
+        Toasty.warning(getContext(), "本地音乐扫描音乐失败").show();
     }
 
     @Override

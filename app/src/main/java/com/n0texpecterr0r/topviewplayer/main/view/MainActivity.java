@@ -1,5 +1,6 @@
 package com.n0texpecterr0r.topviewplayer.main.view;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TabLayout.TabLayoutOnPageChangeListener;
@@ -15,9 +16,12 @@ import com.n0texpecterr0r.topviewplayer.local.view.LocalFragment;
 import com.n0texpecterr0r.topviewplayer.main.adapter.ViewPagerAdapter;
 import com.n0texpecterr0r.topviewplayer.recommend.view.RecommendFragment;
 import com.n0texpecterr0r.topviewplayer.search.view.SearchActivity;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import es.dmoral.toasty.Toasty;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,14 +53,22 @@ public class MainActivity extends AppCompatActivity {
         mTlTab = findViewById(R.id.main_tb_tab);
         mVpPager = findViewById(R.id.main_vp_pager);
 
-        List<Fragment> fragments = new ArrayList<>();
-        fragments.add(new RecommendFragment());
-        fragments.add(new LocalFragment());
-        ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        pagerAdapter.setFragments(fragments);
-        mVpPager.setAdapter(pagerAdapter);
-        mVpPager.addOnPageChangeListener(new TabLayoutOnPageChangeListener(mTlTab));
-        mTlTab.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mVpPager));
+        new RxPermissions(this)
+                .request(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                .subscribe(granted->{
+                    if (!granted)
+                        Toasty.warning(this, "无文件权限，加载本地音乐可能失败");
+                    List<Fragment> fragments = new ArrayList<>();
+                    fragments.add(new RecommendFragment());
+                    fragments.add(new LocalFragment());
+                    ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+                    pagerAdapter.setFragments(fragments);
+                    mVpPager.setAdapter(pagerAdapter);
+                    mVpPager.addOnPageChangeListener(new TabLayoutOnPageChangeListener(mTlTab));
+                    mTlTab.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mVpPager));
+                });
+
         setSupportActionBar(toolbar);
     }
 

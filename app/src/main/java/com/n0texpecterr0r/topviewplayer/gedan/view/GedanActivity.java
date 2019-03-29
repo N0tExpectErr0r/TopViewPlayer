@@ -113,12 +113,6 @@ public class GedanActivity extends MvpBaseActivity<GedanPresenterImpl>
         mTbTitle.setTitle(gedan.getTitle());
         Glide.with(this)
                 .load(gedan.getImgUrl())
-                .placeholder(R.drawable.ic_empty)
-                .error(R.drawable.ic_empty)
-                .dontAnimate()
-                .into(mIvCover);
-        Glide.with(this)
-                .load(gedan.getImgUrl())
                 .asBitmap()
                 .placeholder(R.drawable.ic_empty)
                 .error(R.drawable.ic_empty)
@@ -126,7 +120,7 @@ public class GedanActivity extends MvpBaseActivity<GedanPresenterImpl>
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        mIvBackground.setImageBitmap(resource);
+                        mIvCover.setImageBitmap(resource);
                         mIvBackground.setImageBitmap(
                                 EasyBlur.with(GedanActivity.this)
                                         .bitmap(resource)

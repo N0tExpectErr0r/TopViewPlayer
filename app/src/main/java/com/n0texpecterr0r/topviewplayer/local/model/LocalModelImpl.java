@@ -37,6 +37,7 @@ public class LocalModelImpl implements LocalContract.LocalModel {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
                         callback.error();
                     }
                 });

@@ -54,12 +54,12 @@ public class SongUtil {
         Cursor cur = context.getContentResolver().query(
                 Uri.parse(mUriAlbums + "/" + albumId),
                 projection, null, null, null);
-        String album_art = null;
+        String albumArt = null;
         if (cur.getCount() > 0 && cur.getColumnCount() > 0) {
             cur.moveToNext();
-            album_art = cur.getString(0);
+            albumArt = cur.getString(0);
         }
         cur.close();
-        return album_art;
+        return albumArt;
     }
 }

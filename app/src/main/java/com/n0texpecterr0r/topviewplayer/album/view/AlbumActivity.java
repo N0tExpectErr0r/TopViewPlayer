@@ -105,12 +105,6 @@ public class AlbumActivity extends MvpBaseActivity<AlbumPresenterImpl>
         mTbTitle.setTitle(album.getAlbumInfo().getTitle());
         Glide.with(this)
                 .load(album.getAlbumInfo().getImgUrl())
-                .placeholder(R.drawable.ic_empty)
-                .error(R.drawable.ic_empty)
-                .dontAnimate()
-                .into(mIvCover);
-        Glide.with(this)
-                .load(album.getAlbumInfo().getImgUrl())
                 .asBitmap()
                 .placeholder(R.drawable.ic_empty)
                 .error(R.drawable.ic_empty)
@@ -118,7 +112,7 @@ public class AlbumActivity extends MvpBaseActivity<AlbumPresenterImpl>
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        mIvBackground.setImageBitmap(resource);
+                        mIvCover.setImageBitmap(resource);
                         mIvBackground.setImageBitmap(
                                 EasyBlur.with(com.n0texpecterr0r.topviewplayer.album.view.AlbumActivity.this)
                                         .bitmap(resource)
