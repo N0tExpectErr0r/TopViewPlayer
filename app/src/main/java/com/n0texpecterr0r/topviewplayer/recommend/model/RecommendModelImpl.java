@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import api.MusicApi;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.n0texpecterr0r.topviewplayer.bean.Song;
 import com.n0texpecterr0r.topviewplayer.recommend.RecommendContract.RecommendModel;
 import com.n0texpecterr0r.topviewplayer.recommend.RecommendContract.RecommendPresenterCallback;
 import com.n0texpecterr0r.topviewplayer.recommend.bean.AlbumRecommend;
@@ -93,6 +94,43 @@ public class RecommendModelImpl implements RecommendModel {
                     @Override
                     public void accept(List<Focus> focusList) throws Exception {
                         callback.solveFocus(focusList);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) {
+                        callback.error();
+                    }
+                });
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void getSongInfo(RecommendPresenterCallback callback, String songId) {
+        Observable.create(new ObservableOnSubscribe<Response>() {
+            @Override
+            public void subscribe(ObservableEmitter<Response> emitter) throws Exception {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url(MusicApi.Song.songBaseInfo(songId))
+                        .addHeader("User-Agent",USER_AGENT)
+                        .get()
+                        .build();
+                Call call = client.newCall(request);
+                Response response = call.execute();
+                emitter.onNext(response);
+            }
+        }).map(new Function<Response, List<Song>>() {
+            @Override
+            public List<Song> apply(Response response) throws Exception {
+                String json = JsonUtil.getNodeString(response.body().string(),"result.items");
+                return new Gson().fromJson(json, new TypeToken<List<Song>>(){}.getType());
+            }
+        }).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Song>>() {
+                    @Override
+                    public void accept(List<Song> songList) throws Exception {
+                        callback.solveSongInfo(songList.get(0));
                     }
                 }, new Consumer<Throwable>() {
                     @Override

@@ -11,8 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.n0texpecterr0r.topviewplayer.R;
+import com.n0texpecterr0r.topviewplayer.album.view.AlbumActivity;
 import com.n0texpecterr0r.topviewplayer.base.MvpBaseFragment;
+import com.n0texpecterr0r.topviewplayer.bean.Song;
 import com.n0texpecterr0r.topviewplayer.gedan.view.GedanActivity;
+import com.n0texpecterr0r.topviewplayer.player.AudioPlayer;
 import com.n0texpecterr0r.topviewplayer.recommend.RecommendContract.RecommendView;
 import com.n0texpecterr0r.topviewplayer.recommend.adapter.RecommendAdapter;
 import com.n0texpecterr0r.topviewplayer.recommend.adapter.RecommendAdapter.OnItemClickListener;
@@ -23,9 +26,12 @@ import com.n0texpecterr0r.topviewplayer.widget.BannerView;
 import com.n0texpecterr0r.topviewplayer.widget.BannerView.OnBannerItemClick;
 import es.dmoral.toasty.Toasty;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import static com.n0texpecterr0r.topviewplayer.recommend.bean.Recommend.TYPE_ALBUM;
 import static com.n0texpecterr0r.topviewplayer.recommend.bean.Recommend.TYPE_GEDAN;
+import static com.n0texpecterr0r.topviewplayer.recommend.bean.Recommend.TYPE_SONG;
 
 /**
  * @author N0tExpectErr0r
@@ -95,6 +101,16 @@ public class RecommendFragment extends MvpBaseFragment<RecommendPresenterImpl> i
     }
 
     @Override
+    public void playSong(Song song) {
+        // 设置当前歌曲及歌曲列表
+        List<Song> songList = Arrays.asList(song);
+
+        AudioPlayer.get().setOnline(true);
+        AudioPlayer.get().setSongList(songList);
+        AudioPlayer.get().changeCurrent(0);
+    }
+
+    @Override
     public void showLoading() {
         mSrlRefresh.setRefreshing(true);
     }
@@ -121,8 +137,16 @@ public class RecommendFragment extends MvpBaseFragment<RecommendPresenterImpl> i
                 Log.d("RecommendFragment", "Gedan Id:"+recommend.getId());
                 GedanActivity.actionStart(getContext(), recommend.getId());
                 break;
+            case TYPE_ALBUM:
+                Log.d("RecommendFragment", "Album Id:"+recommend.getId());
+                AlbumActivity.actionStart(getContext(), recommend.getId());
+                break;
+            case TYPE_SONG:
+                Log.d("RecommendFragment", "Song Id:"+recommend.getId());
+                mPresenter.getSongInfo(recommend.getId());
+                break;
             default:
-                Toasty.success(getContext(),recommend.getTitle()).show();
+                Toasty.success(getContext(),recommend.getId()).show();
                 break;
         }
     }

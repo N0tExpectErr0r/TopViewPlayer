@@ -10,12 +10,6 @@ import com.n0texpecterr0r.topviewplayer.bean.Song;
 import com.n0texpecterr0r.topviewplayer.gedan.bean.Gedan;
 import com.n0texpecterr0r.topviewplayer.gedan.bean.GedanSong;
 
-/**
- * 描述
- *
- * @author N0tExpectErr0r
- * @time 2019/03/29
- */
 public class GedanContract {
     public interface GedanView extends MvpBaseView {
         void showGedan(Gedan gedan);

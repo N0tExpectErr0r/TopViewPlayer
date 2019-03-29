@@ -1,6 +1,7 @@
 package com.n0texpecterr0r.topviewplayer.recommend.presenter;
 
 import com.n0texpecterr0r.topviewplayer.base.MvpBasePresenter;
+import com.n0texpecterr0r.topviewplayer.bean.Song;
 import com.n0texpecterr0r.topviewplayer.recommend.RecommendContract.RecommendModel;
 import com.n0texpecterr0r.topviewplayer.recommend.RecommendContract.RecommendPresenter;
 import com.n0texpecterr0r.topviewplayer.recommend.RecommendContract.RecommendPresenterCallback;
@@ -48,7 +49,17 @@ public class RecommendPresenterImpl extends MvpBasePresenter<RecommendView>
     }
 
     @Override
+    public void solveSongInfo(Song song) {
+        mView.playSong(song);
+    }
+
+    @Override
     public void getFocus() {
         mModel.getFocus(this);
+    }
+
+    @Override
+    public void getSongInfo(String songId) {
+        mModel.getSongInfo(this, songId);
     }
 }
