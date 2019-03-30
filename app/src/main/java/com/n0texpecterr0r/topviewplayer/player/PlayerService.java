@@ -247,6 +247,8 @@ public class PlayerService extends Service {
             mPlayer.stop();
             mPlayer.release();
         }
+        for (OnChangeSongListener completeListener : mCompleteListeners)
+            mCompleteListeners.remove(completeListener);
         unregisterReceiver(mBroadcast);
     }
 
@@ -368,6 +370,8 @@ public class PlayerService extends Service {
         Glide.with(getApplicationContext())
                 .load(song.getImgUrl())
                 .asBitmap()
+                .placeholder(R.drawable.ic_empty)
+                .error(R.drawable.ic_empty)
                 .into(mTarget);
         mRemoteViews.setTextViewText(R.id.notification_tv_name, song.getName());
         if (song.getAlbum().isEmpty()) {
@@ -390,90 +394,5 @@ public class PlayerService extends Service {
         filter.addAction(ACTION_PREV);
         filter.addAction(ACTION_INIT);
         registerReceiver(mBroadcast, filter);
-    }
-
-    public class NotificationBroadcast extends BroadcastReceiver {
-        private IPlayerService mPlayerService;
-        private boolean isInit = false;
-
-        private ServiceConnection mConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                mPlayerService = IPlayerService.Stub.asInterface(service);
-                isInit = true;
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                mPlayerService = null;
-            }
-        };
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            switch (intent.getAction()){
-                case ACTION_INIT:
-                    Intent serviceIntent = new Intent(context, PlayerService.class);
-                    bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
-                    break;
-                case ACTION_PREV:
-                    Log.d("NotificationLog", "prev");
-                    if (isInit)
-                        prev();
-                    break;
-                case ACTION_NEXT:
-                    Log.d("NotificationLog", "next");
-                    if (isInit)
-                        next();
-                    break;
-                case ACTION_ACTION:
-                    Log.d("NotificationLog", "action");
-                    if (isInit) {
-                        try {
-                            if (mPlayerService.isPlaying())
-                                pause();
-                            else
-                                play();
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void play() {
-            try {
-                mPlayerService.play();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-
-        private void pause() {
-            try {
-                mPlayerService.pause();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-
-        private void next() {
-            try {
-                mPlayerService.next();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-
-        private void prev() {
-            try {
-                mPlayerService.prev();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

@@ -8,10 +8,10 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="20dp">
         <TextView
             android:id="@+id/notification_tv_name"
             android:layout_width="match_parent"
@@ -58,8 +58,8 @@
     </LinearLayout>
     <ImageView
         android:id="@+id/notification_iv_cover"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
         android:layout_marginLeft="10dp"
 
         android:src="@drawable/ic_empty"/>

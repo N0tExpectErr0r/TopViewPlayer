@@ -2,6 +2,7 @@ package com.n0texpecterr0r.topviewplayer.player;
 
 import android.os.RemoteException;
 import android.util.Log;
+import android.util.SparseArray;
 
 import com.n0texpecterr0r.topviewplayer.IPlayerService;
 import com.n0texpecterr0r.topviewplayer.OnChangeSongListener;
