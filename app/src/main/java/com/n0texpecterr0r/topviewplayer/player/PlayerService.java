@@ -63,6 +63,7 @@ public class PlayerService extends Service {
     public static final String ACTION_ACTION = "ACTION";
     public static final String ACTION_NEXT = "NEXT";
     public static final String ACTION_INIT = "INIT";
+    public static final String ACTION_DETAIL = "DETAIL";
     private static final int NOTIFICATION_ID = 0x234;
     private static final String CHANNEL_ID = "PLAYER_CHANNEL";
     private SongListManager mSongListManager;
@@ -330,7 +331,7 @@ public class PlayerService extends Service {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                    "TopViewPlayer", NotificationManager.IMPORTANCE_DEFAULT);
+                    "TopViewPlayer", NotificationManager.IMPORTANCE_MAX);
             mNotificationManager.createNotificationChannel(channel);
         }
 
@@ -355,6 +356,13 @@ public class PlayerService extends Service {
         PendingIntent intentAction = PendingIntent.getBroadcast(this,
                 3, action, PendingIntent.FLAG_UPDATE_CURRENT);
         mRemoteViews.setOnClickPendingIntent(R.id.notification_iv_action, intentAction);
+
+        // 详情
+        Intent detail = new Intent();
+        detail.setAction(ACTION_DETAIL);
+        PendingIntent intentDetail = PendingIntent.getBroadcast(this,
+                4, detail, PendingIntent.FLAG_UPDATE_CURRENT);
+        mRemoteViews.setOnClickPendingIntent(R.id.notification_ll_container, intentDetail);
 
         mNotification = builder
                 .setCustomBigContentView(mRemoteViews)
@@ -393,6 +401,7 @@ public class PlayerService extends Service {
         filter.addAction(ACTION_NEXT);
         filter.addAction(ACTION_PREV);
         filter.addAction(ACTION_INIT);
+        filter.addAction(ACTION_DETAIL);
         registerReceiver(mBroadcast, filter);
     }
 }

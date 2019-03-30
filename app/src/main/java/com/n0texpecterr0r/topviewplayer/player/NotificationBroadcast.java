@@ -5,12 +5,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 
 import com.n0texpecterr0r.topviewplayer.IPlayerService;
 import com.n0texpecterr0r.topviewplayer.detail.view.DetailActivity;
+
+import java.lang.reflect.Method;
 
 import static com.n0texpecterr0r.topviewplayer.player.PlayerService.*;
 
@@ -40,6 +43,18 @@ public class NotificationBroadcast extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         switch (intent.getAction()){
+            case ACTION_DETAIL:
+                Log.d("NotificationLog", "detail");
+                try {
+                    if (mPlayerService.getCurrentSong() != null) {
+                        Intent detailIntent = new Intent(context, DetailActivity.class);
+                        context.startActivity(detailIntent);
+                        collapseStatusBar(context);
+                    }
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+                break;
             case ACTION_INIT:
                 Log.d("NotificationLog", "init");
                 Intent serviceIntent = new Intent(context, PlayerService.class);
@@ -102,6 +117,21 @@ public class NotificationBroadcast extends BroadcastReceiver {
             mPlayerService.prev();
         } catch (RemoteException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void collapseStatusBar(Context context) {
+        try {
+            Object statusBarManager = context.getSystemService("statusbar");
+            Method collapse;
+            if (Build.VERSION.SDK_INT <= 16) {
+                collapse = statusBarManager.getClass().getMethod("collapse");
+            } else {
+                collapse = statusBarManager.getClass().getMethod("collapsePanels");
+            }
+            collapse.invoke(statusBarManager);
+        } catch (Exception localException) {
+            localException.printStackTrace();
         }
     }
 }

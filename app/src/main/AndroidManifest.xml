@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
 
     <application
         android:name=".AppApplication"
@@ -35,7 +36,9 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".detail.view.DetailActivity"></activity>
+        <activity
+            android:name=".detail.view.DetailActivity"
+            android:launchMode="singleTop"/>
         <activity android:name=".album.view.AlbumActivity"></activity>
     </application>
 
